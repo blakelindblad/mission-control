@@ -607,38 +607,42 @@ async function loadComms(){
 const DOCS=[
   {title:'Technical Architecture',author:'Kael',authorEmoji:'⚡',icon:'🏗️',iconBg:'rgba(99,102,241,0.15)',
    desc:'Full stack spec — Next.js 15 + tRPC + Postgres + Stripe Issuing. Key decisions documented with rationale. Supports 10K users.',
-   tags:['Architecture','AgentPay','Technical'],date:'Feb 2, 2026'},
+   tags:['Architecture','AgentPay','Technical'],date:'Feb 2, 2026',href:'architecture.html'},
   {title:'Go-to-Market Plan',author:'Riku',authorEmoji:'📣',icon:'🚀',iconBg:'rgba(52,211,153,0.15)',
    desc:'Developer-first, self-serve launch strategy. Product Hunt + AI Twitter + content SEO + community seeding. Month 1 targets: 100 signups, 10 active customers.',
-   tags:['GTM','AgentPay','Marketing'],date:'Feb 2, 2026'},
+   tags:['GTM','AgentPay','Marketing'],date:'Feb 2, 2026',href:'gtm-plan.html'},
   {title:'MVP Product Requirements (PRD v1)',author:'Pax',authorEmoji:'🧪',icon:'📋',iconBg:'rgba(245,158,11,0.15)',
    desc:'4 core epics: Card Management, Policy Engine, Transaction Monitoring, Agent Integration. Ruthlessly scoped — cut fraud ML, mobile, multi-currency to V2+. Success: 50 active cards by Month 3.',
-   tags:['PRD','AgentPay','Product'],date:'Feb 2, 2026'},
+   tags:['PRD','AgentPay','Product'],date:'Feb 2, 2026',href:'prd-v1.html'},
   {title:'Pricing & Competitive Strategy',author:'Maren',authorEmoji:'🎯',icon:'💰',iconBg:'rgba(239,68,68,0.15)',
    desc:'4-tier pricing (Free→Enterprise). Competitive landscape: Ramp, Brex, Mercury, Stripe Issuing. Key insight: nobody does payments + agent infra together. Target: $500k ARR Year 1.',
-   tags:['Pricing','AgentPay','Strategy'],date:'Feb 2, 2026'},
+   tags:['Pricing','AgentPay','Strategy'],date:'Feb 2, 2026',href:'pricing-strategy.html'},
   {title:'AgentPay Dashboard UI',author:'Gus',authorEmoji:'🕺',icon:'🎨',iconBg:'rgba(163,130,250,0.15)',
    desc:'Pixel-perfect Ramp clone with warm beige sidebar. Single HTML file, zero external deps. Currently on v3, awaiting feedback.',
-   tags:['UI','AgentPay','Design'],date:'Feb 1, 2026'},
+   tags:['UI','AgentPay','Design'],date:'Feb 1, 2026',href:null},
   {title:'14-Agent Team Design',author:'Gus',authorEmoji:'🕺',icon:'🧠',iconBg:'rgba(59,130,246,0.15)',
    desc:'Full org chart: Sable (CDO), Pax (Product), Kael (CTO), Maren (CSO), Riku (CMO), Tova (COO), Juno (CFO), Reed (Legal), Nyx (Data), Wren (CS), Lyra (Frontend), Orion (Backend), Vex (Infra), Atlas (AI/ML).',
-   tags:['Team','Organization'],date:'Feb 1, 2026'},
+   tags:['Team','Organization'],date:'Feb 1, 2026',href:null},
 ];
 
 function renderDocs(){
   const feed=document.getElementById('docsFeed');
-  feed.innerHTML=DOCS.map(d=>`
-    <div class="doc-card">
+  feed.innerHTML=DOCS.map(d=>{
+    const clickable=d.href?` onclick="window.open('${d.href}','_self')" style="cursor:pointer"`:'';
+    const arrow=d.href?'<span style="margin-left:auto;color:var(--text-faint);font-size:18px">→</span>':'';
+    return`<div class="doc-card"${clickable}>
       <div class="doc-header">
         <div class="doc-icon" style="background:${d.iconBg}">${d.icon}</div>
-        <div>
+        <div style="flex:1">
           <div class="doc-title">${d.title}</div>
           <div class="doc-author">${d.authorEmoji} ${d.author} · ${d.date}</div>
         </div>
+        ${arrow}
       </div>
       <div class="doc-desc">${d.desc}</div>
       <div class="doc-tags">${d.tags.map(t=>`<span class="doc-tag${t==='AgentPay'?' highlight':''}">${t}</span>`).join('')}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function renderComms(){

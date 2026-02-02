@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Go-to-Market Plan — AgentPay</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--card:#13131e;--card-border:#1c1c2c;--text:#e8e8ef;--text-dim:#8888a0;--text-faint:#55556a;--accent:#f59e0b;--blue:#3b82f6;--purple:#a78bfa;--green:#34d399;--radius:12px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;padding:0}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(245,158,11,0.06) 0%,transparent 60%);pointer-events:none;z-index:0}
+.top-bar{position:sticky;top:0;z-index:10;background:rgba(10,10,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--card-border);padding:12px 20px;display:flex;align-items:center;gap:10px}
+.back{color:var(--accent);text-decoration:none;font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px}
+.back:hover{opacity:.8}
+.top-title{font-size:13px;color:var(--text-dim);margin-left:auto}
+.container{max-width:780px;margin:0 auto;padding:32px 24px 80px;position:relative;z-index:1}
+.doc-hero{margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--card-border)}
+.doc-hero h1{font-size:28px;font-weight:700;line-height:1.2;margin-bottom:8px}
+.doc-meta{font-size:13px;color:var(--text-dim);display:flex;align-items:center;gap:12px}
+.doc-meta .author-badge{background:rgba(245,158,11,0.12);color:var(--accent);padding:3px 10px;border-radius:6px;font-weight:600}
+.content h1{font-size:24px;font-weight:700;margin:32px 0 12px;color:var(--text)}
+.content h2{font-size:20px;font-weight:700;margin:28px 0 10px;color:var(--text);padding-top:20px;border-top:1px solid var(--card-border)}
+.content h3{font-size:16px;font-weight:600;margin:22px 0 8px;color:var(--text)}
+.content h4{font-size:14px;font-weight:600;margin:18px 0 6px;color:var(--accent)}
+.content p{margin:8px 0;color:var(--text-dim);font-size:14px}
+.content p.subtitle{font-style:italic;color:var(--text-faint);margin-bottom:16px}
+.content strong{color:var(--text);font-weight:600}
+.content em{color:var(--text-dim)}
+.content ul{margin:8px 0 8px 20px;color:var(--text-dim);font-size:14px}
+.content li{margin:4px 0}
+.content ul.checklist{list-style:none;margin-left:0}
+.content ul.checklist li{padding:4px 0}
+.content hr{border:none;border-top:1px solid var(--card-border);margin:24px 0}
+.content pre{background:var(--card);border:1px solid var(--card-border);border-radius:8px;padding:16px;margin:12px 0;overflow-x:auto;font-size:12px;line-height:1.5}
+.content code{font-family:'SF Mono',Menlo,monospace;font-size:12px}
+.content code.inline{background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:12px;color:var(--accent)}
+@media(max-width:600px){
+  .container{padding:20px 16px 60px}
+  .doc-hero h1{font-size:22px}
+  .content h2{font-size:17px}
+}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <a href="index.html" class="back">← Mission Control</a>
+  <span class="top-title">AgentPay Docs</span>
+</div>
+<div class="container">
+  <div class="doc-hero">
+    <h1>Go-to-Market Plan</h1>
+    <div class="doc-meta">
+      <span class="author-badge">📣 Riku — CMO</span>
+      <span>February 2, 2026</span>
+      <span>AgentPay</span>
+    </div>
+  </div>
+  <div class="content">
+<h1>AgentPay Go-to-Market Plan</h1>
+<p class="subtitle"><em>"Ramp for AI Agents" — Financial rails for autonomous AI</em></p>
+
+<h2>Positioning Statement</h2>
+
+<p><strong>"The first financial infrastructure built for AI agents. Issue virtual cards, set spending limits, and track expenses—all through APIs your agents can use. No human intervention required."</strong></p>
+
+<h3>Key Value Props:</h3>
+<ul>
+<li><strong>Instant financial access</strong>: Virtual cards ready in seconds via API</li>
+<li><strong>Built-in guardrails</strong>: Smart budgets and spending limits prevent runaway costs</li>
+<li><strong>Agent-native</strong>: RESTful APIs designed for programmatic access</li>
+<li><strong>Enterprise-ready</strong>: Compliance, security, and audit trails from day one</li>
+</ul>
+
+<hr>
+
+<h2>Target Personas</h2>
+
+<h3>Primary: AI Startup CTOs</h3>
+<p><strong>Who</strong>: Technical leaders building AI agent platforms</p>
+<ul>
+<li><strong>Pain</strong>: Need to give agents spending capability without financial risk</li>
+<li><strong>Job-to-be-done</strong>: "Enable my agents to make purchases without manual approval"</li>
+<li><strong>Channels</strong>: AI Twitter, Hacker News, developer Slack communities</li>
+</ul>
+
+<h3>Secondary: Automation Agency Founders  </h3>
+<p><strong>Who</strong>: Service providers deploying AI agents for clients</p>
+<ul>
+<li><strong>Pain</strong>: Managing expenses across multiple client agent deployments</li>
+<li><strong>Job-to-be-done</strong>: "Isolate and track spending per client agent"</li>
+<li><strong>Channels</strong>: LinkedIn, automation-focused communities, referrals</li>
+</ul>
+
+<h3>Tertiary: Enterprise AI/Engineering Leaders</h3>
+<p><strong>Who</strong>: Large company teams experimenting with AI agents</p>
+<ul>
+<li><strong>Pain</strong>: Corporate cards too slow, expense reports don't work for agents</li>
+<li><strong>Job-to-be-done</strong>: "Get AI agent spending approved by finance"</li>
+<li><strong>Channels</strong>: Industry conferences, enterprise sales (future), content marketing</li>
+</ul>
+
+<hr>
+
+<h2>Launch Strategy</h2>
+
+<h3>Phase 1: Developer Community Validation (Month 1)</h3>
+<p><strong>Goal</strong>: 100 developer signups, 10 active customers</p>
+
+<p><strong>Tactics</strong>:</p>
+<ul>
+<li>Ship to Product Hunt with AI agent angle</li>
+<li>Seed AI Twitter with technical threads</li>
+<li>Launch on Hacker News as "Show HN"</li>
+<li>Direct outreach to 50 AI startup CTOs</li>
+</ul>
+
+<h3>Phase 2: Content Authority (Months 2-3)</h3>
+<p><strong>Goal</strong>: 500 signups, establish thought leadership</p>
+
+<p><strong>Tactics</strong>:</p>
+<ul>
+<li>Weekly AI infrastructure deep-dives</li>
+<li>Open source agent financial toolkit</li>
+<li>Speaking at AI conferences</li>
+<li>Partner integrations (LangChain, etc.)</li>
+</ul>
+
+<h3>Phase 3: Scale Distribution (Months 4-6)</h3>
+<p><strong>Goal</strong>: 2,000 signups, viral growth loops</p>
+
+<p><strong>Tactics</strong>:</p>
+<ul>
+<li>Built-in referral mechanics</li>
+<li>API-first marketing (usage drives discovery)</li>
+<li>SEO dominance for "AI agent payments"</li>
+<li>Paid acquisition on proven channels</li>
+</ul>
+
+<hr>
+
+<h2>Content Calendar - Month 1</h2>
+
+<h3>Week 1: Launch Blitz</h3>
+<p><strong>Mon</strong>: Product Hunt launch</p>
+<ul>
+<li><strong>Tweet thread</strong>: "Why AI agents need their own credit cards"</li>
+<li><strong>Blog post</strong>: "Introducing AgentPay: Ramp for AI Agents"</li>
+</ul>
+
+<p><strong>Wed</strong>: Technical deep-dive</p>
+<ul>
+<li><strong>Blog post</strong>: "Building financial guardrails for autonomous AI"</li>
+<li><strong>Dev community posts</strong>: Implementation guides</li>
+</ul>
+
+<p><strong>Fri</strong>: Social proof</p>
+<ul>
+<li><strong>Case study</strong>: First customer implementation</li>
+<li><strong>Twitter</strong>: User-generated content from beta users</li>
+</ul>
+
+<h3>Week 2: Education Focus</h3>
+<p><strong>Mon</strong>: <strong>Blog post</strong>: "The complete guide to AI agent expense management"</p>
+<p><strong>Wed</strong>: <strong>Tutorial</strong>: "5-minute AgentPay integration for LangChain"</p>
+<p><strong>Fri</strong>: <strong>Twitter thread</strong>: "AI agent spending horror stories (and how to prevent them)"</p>
+
+<h3>Week 3: Community Building</h3>
+<p><strong>Mon</strong>: <strong>Podcast appearances</strong> on AI/dev shows</p>
+<p><strong>Wed</strong>: <strong>Guest post</strong>: Major AI blog collaboration</p>
+<p><strong>Fri</strong>: <strong>AMA</strong>: Reddit r/MachineLearning</p>
+
+<h3>Week 4: Authority Building</h3>
+<p><strong>Mon</strong>: <strong>Research post</strong>: "State of AI agent infrastructure 2026"</p>
+<p><strong>Wed</strong>: <strong>Open source release</strong>: Agent financial SDK</p>
+<p><strong>Fri</strong>: <strong>Conference talk</strong> submission follow-ups</p>
+
+<hr>
+
+<h2>Distribution Channels</h2>
+
+<h3>1. AI Twitter (Primary)</h3>
+<ul>
+<li><strong>Strategy</strong>: Technical threads, not promotional tweets</li>
+<li><strong>Target</strong>: 10k followers by month 3</li>
+<li><strong>Content</strong>: Agent architecture, spending patterns, war stories</li>
+</ul>
+
+<h3>2. Developer Communities (Primary)  </h3>
+<ul>
+<li><strong>Hacker News</strong>: Weekly technical submissions</li>
+<li><strong>Reddit</strong>: r/MachineLearning, r/LocalLLaMA, r/entrepreneur</li>
+<li><strong>Discord/Slack</strong>: AI agent builders, LangChain community</li>
+</ul>
+
+<h3>3. Content Marketing (Growth Engine)</h3>
+<ul>
+<li><strong>SEO targets</strong>: "AI agent payments", "autonomous AI spending", "agent financial rails"</li>
+<li><strong>Format</strong>: Technical tutorials, implementation guides, industry analysis</li>
+<li><strong>Distribution</strong>: Own blog + syndication</li>
+</ul>
+
+<h3>4. Product Hunt & Launch Platforms</h3>
+<ul>
+<li><strong>Strategy</strong>: Major launches every quarter</li>
+<li><strong>Angle</strong>: Always lead with technical innovation, not just "another fintech"</li>
+</ul>
+
+<h3>5. Strategic Partnerships</h3>
+<ul>
+<li><strong>LangChain integration</strong>: Built-in AgentPay support</li>
+<li><strong>AI framework partnerships</strong>: AutoGPT, LangGraph, CrewAI</li>
+<li><strong>Cloud provider partnerships</strong>: AWS/GCP marketplace</li>
+</ul>
+
+<hr>
+
+<h2>Key Metrics & Targets</h2>
+
+<h3>North Star Metric</h3>
+<p><strong>Monthly Transaction Volume</strong>: $100k by month 6</p>
+
+<h3>Leading Indicators</h3>
+<ul>
+<li><strong>Developer signups</strong>: 100/month by month 3</li>
+<li><strong>API integrations</strong>: 25/month by month 6</li>
+<li><strong>Content engagement</strong>: 10k monthly blog views by month 3</li>
+</ul>
+
+<h3>Conversion Funnel</h3>
+<ul>
+<li><strong>Signup → First API call</strong>: 60% (industry: 40%)</li>
+<li><strong>API call → First transaction</strong>: 30% (optimize heavily)</li>
+<li><strong>First transaction → $1k volume</strong>: 20% (retention focus)</li>
+</ul>
+
+<h3>Channel Attribution</h3>
+<ul>
+<li><strong>Organic search</strong>: 40% of signups</li>
+<li><strong>Social (Twitter)</strong>: 25% of signups</li>
+<li><strong>Direct/referral</strong>: 20% of signups</li>
+<li><strong>Communities</strong>: 15% of signups</li>
+</ul>
+
+<hr>
+
+<h2>Competitive Differentiation</h2>
+
+<h3>vs. Traditional Corporate Cards</h3>
+<ul>
+<li><strong>Speed</strong>: Cards issued instantly via API, not 2-week approval</li>
+<li><strong>Automation</strong>: No manual expense reports or approval workflows</li>
+<li><strong>Integration</strong>: RESTful APIs, not clunky web portals</li>
+</ul>
+
+<h3>vs. Stripe/Other Payment APIs  </h3>
+<ul>
+<li><strong>Spend controls</strong>: Built-in budgets and spending limits</li>
+<li><strong>Agent-specific</strong>: Designed for autonomous, not human usage</li>
+<li><strong>Visibility</strong>: Real-time spending dashboards for agent operators</li>
+</ul>
+
+<hr>
+
+<h2>Success Criteria - Month 1</h2>
+
+<h3>Quantitative</h3>
+<ul class="checklist">
+<li>⬜ 100 developer signups</li>
+<li>⬜ 10 active customers (>$100 transaction volume)</li>
+<li>⬜ $5,000 total transaction volume</li>
+<li>⬜ 50% signup→first API call conversion</li>
+<li>⬜ 500 followers across social channels</li>
+
+</ul>
+<h3>Qualitative  </h3>
+<ul class="checklist">
+<li>⬜ 3 customer case studies/testimonials</li>
+<li>⬜ 1 major AI influencer mention/repost</li>
+<li>⬜ Featured on 2 AI newsletters/publications</li>
+<li>⬜ Positive sentiment in developer communities</li>
+<li>⬜ Clear product-market fit signals from user feedback</li>
+
+</ul>
+<hr>
+
+<h2>Growth Loops to Build</h2>
+
+<h3>1. API Usage Loop</h3>
+<p>Usage → Better analytics → Shared insights → Discovery → More usage</p>
+
+<h3>2. Developer Content Loop</h3>
+<p>Users → Implementation stories → Technical content → SEO → New developers</p>
+
+<h3>3. Network Effects</h3>
+<p>More agents → Better spending data → Industry benchmarks → Attracts more companies</p>
+
+<hr>
+
+<p class="subtitle"><em>This is a living document. Weekly reviews with Gus (CEO) and monthly strategy pivots based on data.</em></p>
+
+  </div>
+</div>
+</body>
+</html>

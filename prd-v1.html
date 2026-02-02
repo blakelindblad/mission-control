@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MVP Product Requirements — AgentPay</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--card:#13131e;--card-border:#1c1c2c;--text:#e8e8ef;--text-dim:#8888a0;--text-faint:#55556a;--accent:#f59e0b;--blue:#3b82f6;--purple:#a78bfa;--green:#34d399;--radius:12px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;padding:0}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(245,158,11,0.06) 0%,transparent 60%);pointer-events:none;z-index:0}
+.top-bar{position:sticky;top:0;z-index:10;background:rgba(10,10,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--card-border);padding:12px 20px;display:flex;align-items:center;gap:10px}
+.back{color:var(--accent);text-decoration:none;font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px}
+.back:hover{opacity:.8}
+.top-title{font-size:13px;color:var(--text-dim);margin-left:auto}
+.container{max-width:780px;margin:0 auto;padding:32px 24px 80px;position:relative;z-index:1}
+.doc-hero{margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--card-border)}
+.doc-hero h1{font-size:28px;font-weight:700;line-height:1.2;margin-bottom:8px}
+.doc-meta{font-size:13px;color:var(--text-dim);display:flex;align-items:center;gap:12px}
+.doc-meta .author-badge{background:rgba(245,158,11,0.12);color:var(--accent);padding:3px 10px;border-radius:6px;font-weight:600}
+.content h1{font-size:24px;font-weight:700;margin:32px 0 12px;color:var(--text)}
+.content h2{font-size:20px;font-weight:700;margin:28px 0 10px;color:var(--text);padding-top:20px;border-top:1px solid var(--card-border)}
+.content h3{font-size:16px;font-weight:600;margin:22px 0 8px;color:var(--text)}
+.content h4{font-size:14px;font-weight:600;margin:18px 0 6px;color:var(--accent)}
+.content p{margin:8px 0;color:var(--text-dim);font-size:14px}
+.content p.subtitle{font-style:italic;color:var(--text-faint);margin-bottom:16px}
+.content strong{color:var(--text);font-weight:600}
+.content em{color:var(--text-dim)}
+.content ul{margin:8px 0 8px 20px;color:var(--text-dim);font-size:14px}
+.content li{margin:4px 0}
+.content ul.checklist{list-style:none;margin-left:0}
+.content ul.checklist li{padding:4px 0}
+.content hr{border:none;border-top:1px solid var(--card-border);margin:24px 0}
+.content pre{background:var(--card);border:1px solid var(--card-border);border-radius:8px;padding:16px;margin:12px 0;overflow-x:auto;font-size:12px;line-height:1.5}
+.content code{font-family:'SF Mono',Menlo,monospace;font-size:12px}
+.content code.inline{background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:12px;color:var(--accent)}
+@media(max-width:600px){
+  .container{padding:20px 16px 60px}
+  .doc-hero h1{font-size:22px}
+  .content h2{font-size:17px}
+}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <a href="index.html" class="back">← Mission Control</a>
+  <span class="top-title">AgentPay Docs</span>
+</div>
+<div class="container">
+  <div class="doc-hero">
+    <h1>MVP Product Requirements</h1>
+    <div class="doc-meta">
+      <span class="author-badge">🧪 Pax — Product</span>
+      <span>February 2, 2026</span>
+      <span>AgentPay</span>
+    </div>
+  </div>
+  <div class="content">
+<h1>AgentPay MVP — Product Requirements Document</h1>
+<p class="subtitle"><em>Version 1.0 | Author: Pax | Date: February 2, 2026</em></p>
+
+<h2>Problem Statement</h2>
+<p>Companies deploying autonomous AI agents need financial guardrails. Current solutions require human intervention for every transaction, breaking agent autonomy. Companies need a way to give agents spending power while maintaining control and visibility.</p>
+
+<h2>Product Vision</h2>
+<p>AgentPay is Ramp for AI agents — the financial infrastructure that enables autonomous agent commerce with enterprise-grade controls.</p>
+
+<h2>Target User</h2>
+<p><strong>Primary:</strong> DevOps/Platform Engineers at AI-first companies (50-500 employees) who deploy agents that need to make purchases autonomously.</p>
+
+<p><strong>Secondary:</strong> Finance/Operations teams who need spending visibility and compliance.</p>
+
+<h2>Core User Journey</h2>
+<ul>
+<li>Engineer connects agent to AgentPay via API</li>
+</ul>
+<ul>
+<li>Admin provisions virtual card with spending limits/policies</li>
+</ul>
+<ul>
+<li>Agent makes autonomous purchases using virtual card</li>
+</ul>
+<ul>
+<li>Finance team tracks/reconciles in real-time dashboard</li>
+</ul>
+
+<h2>MVP Success Metrics</h2>
+
+<h3>Primary (One Metric That Matters)</h3>
+<ul>
+<li><strong>Active Virtual Cards</strong>: Number of cards making ≥1 transaction per week</li>
+<li><strong>Target</strong>: 50 active cards by Month 3</li>
+</ul>
+
+<h3>Secondary  </h3>
+<ul>
+<li><strong>Time to First Transaction</strong>: <5 minutes from card creation</li>
+<li><strong>Transaction Success Rate</strong>: >95% (not blocked by false positives)</li>
+<li><strong>User Retention</strong>: >70% of users active after 30 days</li>
+</ul>
+
+<h2>User Stories</h2>
+
+<h3>Epic 1: Card Management</h3>
+<p><strong>As a platform engineer, I want to provision virtual cards for my agents so they can make autonomous purchases.</strong></p>
+
+<ul>
+<li><strong>US1.1</strong>: Create virtual card with spending limits (daily/monthly/per-transaction)</li>
+<li><strong>US1.2</strong>: Assign card to specific agent/service via metadata</li>
+<li><strong>US1.3</strong>: View card details (number, expiry, CVV) for agent integration</li>
+<li><strong>US1.4</strong>: Deactivate/freeze card instantly</li>
+<li><strong>US1.5</strong>: Set merchant category restrictions (SaaS only, no crypto, etc.)</li>
+</ul>
+
+<h3>Epic 2: Policy Engine  </h3>
+<p><strong>As an admin, I want to define spending policies so agents operate within business rules.</strong></p>
+
+<ul>
+<li><strong>US2.1</strong>: Set global spending limits across all agents</li>
+<li><strong>US2.2</strong>: Require approval for transactions >$X</li>
+<li><strong>US2.3</strong>: Block transactions outside business hours/days</li>
+<li><strong>US2.4</strong>: Whitelist/blacklist specific merchants</li>
+<li><strong>US2.5</strong>: Auto-decline transactions from high-risk categories</li>
+</ul>
+
+<h3>Epic 3: Transaction Monitoring</h3>
+<p><strong>As a finance team member, I want real-time transaction visibility so I can track agent spending.</strong></p>
+
+<ul>
+<li><strong>US3.1</strong>: View all transactions in real-time feed</li>
+<li><strong>US3.2</strong>: Search/filter transactions by agent, merchant, amount, date</li>
+<li><strong>US3.3</strong>: Export transaction data for accounting systems</li>
+<li><strong>US3.4</strong>: Get alerts for policy violations or unusual patterns</li>
+<li><strong>US3.5</strong>: See pending transactions awaiting approval</li>
+</ul>
+
+<h3>Epic 4: Agent Integration</h3>
+<p><strong>As a developer, I want simple APIs so my agents can use virtual cards seamlessly.</strong></p>
+
+<ul>
+<li><strong>US4.1</strong>: Get card details via REST API with agent authentication</li>
+<li><strong>US4.2</strong>: Webhook notifications for transaction status (approved/declined)</li>
+<li><strong>US4.3</strong>: SDK/library for common agent frameworks</li>
+<li><strong>US4.4</strong>: Test mode with sandbox cards for development</li>
+</ul>
+
+<h2>MVP Scope</h2>
+
+<h3>✅ IN SCOPE (Must Have)</h3>
+<ul>
+<li>Virtual card creation and management</li>
+<li>Basic spending limits (daily, monthly, per-transaction)</li>
+<li>Real-time transaction dashboard</li>
+<li>Simple policy rules (amount limits, merchant categories)</li>
+<li>REST API for agent integration</li>
+<li>User authentication and basic roles</li>
+<li>Transaction search and export</li>
+<li>Webhook notifications</li>
+</ul>
+
+<h3>❌ OUT OF SCOPE (V2+)</h3>
+<ul>
+<li>Real-time fraud detection/ML models</li>
+<li>Complex approval workflows (multi-level, conditional)</li>
+<li>Accounting system integrations (QuickBooks, etc.)</li>
+<li>Mobile app</li>
+<li>Advanced analytics/reporting</li>
+<li>Multi-currency support</li>
+<li>Expense categorization and receipt management</li>
+<li>Team/department-based controls</li>
+<li>Budget allocations and tracking</li>
+<li>White-label/multi-tenant features</li>
+</ul>
+
+<h2>Acceptance Criteria</h2>
+
+<h3>Functional Requirements</h3>
+<ul>
+<li><strong>Card Provisioning</strong>: Create virtual card in <10 seconds with unique number/CVV</li>
+</ul>
+<ul>
+<li><strong>Policy Enforcement</strong>: Block transactions exceeding limits within 3 seconds</li>
+</ul>
+<ul>
+<li><strong>Real-time Updates</strong>: Transaction appears in dashboard within 5 seconds of processing</li>
+</ul>
+<ul>
+<li><strong>API Performance</strong>: <200ms response time for card details endpoint (95th percentile)</li>
+</ul>
+<ul>
+<li><strong>Uptime</strong>: 99.9% availability during business hours</li>
+</ul>
+
+<h3>Technical Requirements</h3>
+<ul>
+<li><strong>Security</strong>: PCI DSS compliant card data handling</li>
+</ul>
+<ul>
+<li><strong>Authentication</strong>: OAuth 2.0 for dashboard, API keys for agent access</li>
+</ul>
+<ul>
+<li><strong>Rate Limiting</strong>: Max 100 API calls per minute per agent</li>
+</ul>
+<ul>
+<li><strong>Data Retention</strong>: 7 years of transaction history</li>
+</ul>
+<ul>
+<li><strong>Audit Trail</strong>: Immutable log of all policy changes and admin actions</li>
+</ul>
+
+<h3>User Experience Requirements</h3>
+<ul>
+<li><strong>Onboarding</strong>: First card created within 5 minutes of signup</li>
+</ul>
+<ul>
+<li><strong>Dashboard Load</strong>: <2 seconds for transaction list (100 items)</li>
+</ul>
+<ul>
+<li><strong>Mobile Responsive</strong>: Dashboard works on tablet/phone</li>
+</ul>
+<ul>
+<li><strong>Error Messages</strong>: Clear, actionable error messages for API failures</li>
+</ul>
+<ul>
+<li><strong>Documentation</strong>: Complete API docs with code examples</li>
+</ul>
+
+<h2>Risk Assessment</h2>
+
+<h3>High Risk</h3>
+<ul>
+<li><strong>Compliance</strong>: PCI DSS certification timeline (4-6 months)</li>
+<li><strong>Card Provider</strong>: Dependency on third-party virtual card issuer</li>
+<li><strong>Fraud Prevention</strong>: Basic rules may miss sophisticated attack patterns</li>
+</ul>
+
+<h3>Medium Risk</h3>
+<ul>
+<li><strong>API Adoption</strong>: Developers may need more integration support than anticipated</li>
+<li><strong>Scale</strong>: Transaction processing under high load (>1000 TPS)</li>
+</ul>
+
+<h3>Mitigation Strategies</h3>
+<ul>
+<li>Start PCI DSS certification immediately</li>
+<li>Build abstraction layer for multiple card providers</li>
+<li>Conservative fraud rules with manual review queue</li>
+<li>Comprehensive API documentation and SDKs</li>
+</ul>
+
+<h2>Launch Plan</h2>
+
+<h3>Pre-Launch (Month 1)</h3>
+<ul>
+<li>Core MVP development</li>
+<li>PCI DSS compliance audit</li>
+<li>Alpha testing with 3 design partners</li>
+</ul>
+
+<h3>Soft Launch (Month 2)  </h3>
+<ul>
+<li>Beta with 10 select customers</li>
+<li>Iterate based on feedback</li>
+<li>Performance testing and optimization</li>
+</ul>
+
+<h3>Full Launch (Month 3)</h3>
+<ul>
+<li>Public release</li>
+<li>Marketing campaign (Riku/Maren)</li>
+<li>Track success metrics</li>
+</ul>
+
+<h2>Success Definition</h2>
+<p>MVP is successful if we achieve 50 active virtual cards making regular transactions within 3 months, with >70% user retention and <5% policy violation rate.</p>
+
+<hr>
+
+<p class="subtitle"><em>This PRD represents the minimum viable product that validates our core hypothesis: companies need financial infrastructure for autonomous AI agents. Every feature beyond this scope should be validated through user feedback and usage data.</em></p>
+
+  </div>
+</div>
+</body>
+</html>

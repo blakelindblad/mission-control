@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technical Architecture — AgentPay</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--card:#13131e;--card-border:#1c1c2c;--text:#e8e8ef;--text-dim:#8888a0;--text-faint:#55556a;--accent:#f59e0b;--blue:#3b82f6;--purple:#a78bfa;--green:#34d399;--radius:12px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;padding:0}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(245,158,11,0.06) 0%,transparent 60%);pointer-events:none;z-index:0}
+.top-bar{position:sticky;top:0;z-index:10;background:rgba(10,10,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--card-border);padding:12px 20px;display:flex;align-items:center;gap:10px}
+.back{color:var(--accent);text-decoration:none;font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px}
+.back:hover{opacity:.8}
+.top-title{font-size:13px;color:var(--text-dim);margin-left:auto}
+.container{max-width:780px;margin:0 auto;padding:32px 24px 80px;position:relative;z-index:1}
+.doc-hero{margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--card-border)}
+.doc-hero h1{font-size:28px;font-weight:700;line-height:1.2;margin-bottom:8px}
+.doc-meta{font-size:13px;color:var(--text-dim);display:flex;align-items:center;gap:12px}
+.doc-meta .author-badge{background:rgba(245,158,11,0.12);color:var(--accent);padding:3px 10px;border-radius:6px;font-weight:600}
+.content h1{font-size:24px;font-weight:700;margin:32px 0 12px;color:var(--text)}
+.content h2{font-size:20px;font-weight:700;margin:28px 0 10px;color:var(--text);padding-top:20px;border-top:1px solid var(--card-border)}
+.content h3{font-size:16px;font-weight:600;margin:22px 0 8px;color:var(--text)}
+.content h4{font-size:14px;font-weight:600;margin:18px 0 6px;color:var(--accent)}
+.content p{margin:8px 0;color:var(--text-dim);font-size:14px}
+.content p.subtitle{font-style:italic;color:var(--text-faint);margin-bottom:16px}
+.content strong{color:var(--text);font-weight:600}
+.content em{color:var(--text-dim)}
+.content ul{margin:8px 0 8px 20px;color:var(--text-dim);font-size:14px}
+.content li{margin:4px 0}
+.content ul.checklist{list-style:none;margin-left:0}
+.content ul.checklist li{padding:4px 0}
+.content hr{border:none;border-top:1px solid var(--card-border);margin:24px 0}
+.content pre{background:var(--card);border:1px solid var(--card-border);border-radius:8px;padding:16px;margin:12px 0;overflow-x:auto;font-size:12px;line-height:1.5}
+.content code{font-family:'SF Mono',Menlo,monospace;font-size:12px}
+.content code.inline{background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:12px;color:var(--accent)}
+@media(max-width:600px){
+  .container{padding:20px 16px 60px}
+  .doc-hero h1{font-size:22px}
+  .content h2{font-size:17px}
+}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <a href="index.html" class="back">← Mission Control</a>
+  <span class="top-title">AgentPay Docs</span>
+</div>
+<div class="container">
+  <div class="doc-hero">
+    <h1>Technical Architecture</h1>
+    <div class="doc-meta">
+      <span class="author-badge">⚡ Kael — CTO</span>
+      <span>February 2, 2026</span>
+      <span>AgentPay</span>
+    </div>
+  </div>
+  <div class="content">
+<h1>AgentPay Technical Architecture</h1>
+
+<h2>Stack Overview</h2>
+<p><strong>Frontend</strong>: Next.js 15, TypeScript, Tailwind CSS  </p>
+<p><strong>Backend</strong>: tRPC v11, Next.js API routes  </p>
+<p><strong>Database</strong>: Postgres (Neon), Prisma ORM  </p>
+<p><strong>Payments</strong>: Stripe Issuing API  </p>
+<p><strong>Deployment</strong>: Vercel (edge functions)  </p>
+<p><strong>Auth</strong>: Clerk  </p>
+
+<h2>Frontend (Next.js)</h2>
+<ul>
+<li>App Router with Server Components for performance</li>
+<li>Tailwind + Shadcn/ui component library</li>
+<li>React Query for client state management</li>
+<li>TypeScript strict mode, no <code class="inline">any</code> types</li>
+<li>Responsive-first design (mobile → desktop)</li>
+</ul>
+
+<pre><code class="lang-typescript">
+// Type-safe API calls
+const { data: cards } = api.cards.list.useQuery({ limit: 10 });
+</code></pre>
+
+<h2>Backend (tRPC)</h2>
+<ul>
+<li>End-to-end type safety from DB → frontend</li>
+<li>Zod schemas for input validation</li>
+<li>Middleware for auth, rate limiting, logging</li>
+<li>File structure: <code class="inline">server/api/routers/*.ts</code></li>
+</ul>
+
+<pre><code class="lang-typescript">
+export const cardsRouter = createTRPCRouter({
+  list: protectedProcedure
+    .input(z.object({ limit: z.number().min(1).max(100) }))
+    .query(async ({ ctx, input }) =&gt; { ... })
+});
+</code></pre>
+
+<h2>Database (Postgres)</h2>
+<ul>
+<li>Prisma schema with strict relations</li>
+<li>Row-level security (RLS) for multi-tenant isolation</li>
+<li>Indexes on: user_id, card_id, created_at</li>
+<li>Separate schemas: <code class="inline">public</code> (app), <code class="inline">stripe</code> (webhook data)</li>
+</ul>
+
+<pre><code class="lang-prisma">
+model VirtualCard {
+  id         String   @id @default(uuid())
+  stripeId   String   @unique
+  userId     String
+  balance    Int      // cents
+  createdAt  DateTime @default(now())
+  
+  user       User     @relation(fields: [userId], references: [id])
+  @@index([userId])
+}
+</code></pre>
+
+<h2>Payments (Stripe Issuing)</h2>
+<ul>
+<li>Stripe Issuing for virtual card creation</li>
+<li>Webhooks for real-time transaction sync</li>
+<li>Store minimal Stripe data locally (IDs, status)</li>
+<li>Idempotency keys for all mutations</li>
+</ul>
+
+<pre><code class="lang-typescript">
+// Card creation flow
+const stripeCard = await stripe.issuing.cards.create({
+  cardholder: cardholderID,
+  currency: 'usd',
+  type: 'virtual',
+  spending_controls: { spending_limits: [{ amount: budget }] }
+});
+</code></pre>
+
+<h2>Deployment (Vercel)</h2>
+<ul>
+<li>Edge functions for API routes (tRPC)</li>
+<li>Static generation for marketing pages</li>
+<li>Environment-specific configs: dev, staging, prod</li>
+<li>Database migrations in CI/CD (Prisma)</li>
+</ul>
+
+<h2>Key Architectural Decisions</h2>
+
+<p><strong>Why tRPC over REST?</strong>  </p>
+<p>Type safety eliminates entire classes of bugs. API contract stays in sync automatically.</p>
+
+<p><strong>Why Postgres over NoSQL?</strong>  </p>
+<p>Financial data needs ACID transactions. Relational queries for spend analytics.</p>
+
+<p><strong>Why Stripe Issuing vs building cards?</strong>  </p>
+<p>Compliance nightmare. Stripe handles PCI, KYC, AML. We focus on product.</p>
+
+<p><strong>Why Vercel over AWS?</strong>  </p>
+<p>Developer velocity > infrastructure control. Zero-config deployments, edge globally.</p>
+
+<h2>Non-Functional Requirements</h2>
+<ul>
+<li><strong>Latency</strong>: <200ms API responses, <1s page loads</li>
+<li><strong>Security</strong>: SOC 2 Type II, encryption at rest/transit</li>
+<li><strong>Availability</strong>: 99.9% uptime (Vercel SLA)</li>
+<li><strong>Scalability</strong>: Handle 10K users with current architecture</li>
+</ul>
+
+<h2>Phase 1 Implementation</h2>
+<ul>
+<li>Auth + user management (Clerk)</li>
+</ul>
+<ul>
+<li>Virtual card dashboard (read-only Stripe data)</li>
+</ul>
+<ul>
+<li>Transaction history and filtering</li>
+</ul>
+<ul>
+<li>Basic spend controls and limits</li>
+</ul>
+
+<p><strong>ETA</strong>: 4 weeks from kickoff</p>
+
+  </div>
+</div>
+</body>
+</html>

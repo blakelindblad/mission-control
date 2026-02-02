@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing & Competitive Strategy — AgentPay</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--card:#13131e;--card-border:#1c1c2c;--text:#e8e8ef;--text-dim:#8888a0;--text-faint:#55556a;--accent:#f59e0b;--blue:#3b82f6;--purple:#a78bfa;--green:#34d399;--radius:12px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;padding:0}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(245,158,11,0.06) 0%,transparent 60%);pointer-events:none;z-index:0}
+.top-bar{position:sticky;top:0;z-index:10;background:rgba(10,10,15,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--card-border);padding:12px 20px;display:flex;align-items:center;gap:10px}
+.back{color:var(--accent);text-decoration:none;font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px}
+.back:hover{opacity:.8}
+.top-title{font-size:13px;color:var(--text-dim);margin-left:auto}
+.container{max-width:780px;margin:0 auto;padding:32px 24px 80px;position:relative;z-index:1}
+.doc-hero{margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--card-border)}
+.doc-hero h1{font-size:28px;font-weight:700;line-height:1.2;margin-bottom:8px}
+.doc-meta{font-size:13px;color:var(--text-dim);display:flex;align-items:center;gap:12px}
+.doc-meta .author-badge{background:rgba(245,158,11,0.12);color:var(--accent);padding:3px 10px;border-radius:6px;font-weight:600}
+.content h1{font-size:24px;font-weight:700;margin:32px 0 12px;color:var(--text)}
+.content h2{font-size:20px;font-weight:700;margin:28px 0 10px;color:var(--text);padding-top:20px;border-top:1px solid var(--card-border)}
+.content h3{font-size:16px;font-weight:600;margin:22px 0 8px;color:var(--text)}
+.content h4{font-size:14px;font-weight:600;margin:18px 0 6px;color:var(--accent)}
+.content p{margin:8px 0;color:var(--text-dim);font-size:14px}
+.content p.subtitle{font-style:italic;color:var(--text-faint);margin-bottom:16px}
+.content strong{color:var(--text);font-weight:600}
+.content em{color:var(--text-dim)}
+.content ul{margin:8px 0 8px 20px;color:var(--text-dim);font-size:14px}
+.content li{margin:4px 0}
+.content ul.checklist{list-style:none;margin-left:0}
+.content ul.checklist li{padding:4px 0}
+.content hr{border:none;border-top:1px solid var(--card-border);margin:24px 0}
+.content pre{background:var(--card);border:1px solid var(--card-border);border-radius:8px;padding:16px;margin:12px 0;overflow-x:auto;font-size:12px;line-height:1.5}
+.content code{font-family:'SF Mono',Menlo,monospace;font-size:12px}
+.content code.inline{background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:12px;color:var(--accent)}
+@media(max-width:600px){
+  .container{padding:20px 16px 60px}
+  .doc-hero h1{font-size:22px}
+  .content h2{font-size:17px}
+}
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <a href="index.html" class="back">← Mission Control</a>
+  <span class="top-title">AgentPay Docs</span>
+</div>
+<div class="container">
+  <div class="doc-hero">
+    <h1>Pricing & Competitive Strategy</h1>
+    <div class="doc-meta">
+      <span class="author-badge">🎯 Maren — CSO</span>
+      <span>February 2, 2026</span>
+      <span>AgentPay</span>
+    </div>
+  </div>
+  <div class="content">
+<h1>AgentPay Pricing & Competitive Strategy</h1>
+<h2>Chief Sales Officer Analysis - February 2026</h2>
+
+<hr>
+
+<h2>Executive Summary</h2>
+
+<p>AgentPay sits at the intersection of two massive markets: AI agent infrastructure and B2B fintech. While traditional spend management tools like Ramp and Brex target human-driven businesses, AgentPay is uniquely positioned to serve autonomous AI agents that need to transact at machine speed and scale.</p>
+
+<p><strong>Key Insight</strong>: Our competitors either solve payments (Stripe, Ramp) OR agent infrastructure (Modal, Replicate) but nobody solves both. This is our blue ocean opportunity.</p>
+
+<hr>
+
+<h2>Competitor Analysis: Traditional Spend Management</h2>
+
+<h3>Ramp</h3>
+<ul>
+<li><strong>Model</strong>: Freemium with paid tiers</li>
+<li><strong>Tiers</strong>: Starter (Free) → Plus → Enterprise</li>
+<li><strong>Revenue</strong>: Interchange + SaaS fees</li>
+<li><strong>Positioning</strong>: "Finance teams love us"</li>
+<li><strong>Weakness</strong>: Built for humans, not agents</li>
+</ul>
+
+<h3>Brex  </h3>
+<ul>
+<li><strong>Model</strong>: Freemium to paid</li>
+<li><strong>Pricing</strong>: $0/user → $12/user/month</li>
+<li><strong>Revenue</strong>: Interchange + subscription + treasury yield</li>
+<li><strong>Positioning</strong>: "Banking for startups"</li>
+<li><strong>Weakness</strong>: Manual processes, not API-first</li>
+</ul>
+
+<h3>Mercury</h3>
+<ul>
+<li><strong>Model</strong>: Clear tiered SaaS</li>
+<li><strong>Pricing</strong>: $0 → $29.90 → $299/month</li>
+<li><strong>Revenue</strong>: Subscription + interchange</li>
+<li><strong>Positioning</strong>: "Startup banking"</li>
+<li><strong>Weakness</strong>: Traditional business model, not agent-aware</li>
+</ul>
+
+<h3>Stripe Issuing</h3>
+<ul>
+<li><strong>Model</strong>: Pay-per-use</li>
+<li><strong>Pricing</strong>: $0.10/virtual card + $3.50/physical card</li>
+<li><strong>Revenue</strong>: Per-transaction + card fees</li>
+<li><strong>Positioning</strong>: "Embedded financial services"</li>
+<li><strong>Weakness</strong>: Requires heavy development, no spend management</li>
+</ul>
+
+<hr>
+
+<h2>Competitor Analysis: AI Agent Infrastructure</h2>
+
+<h3>Modal</h3>
+<ul>
+<li><strong>Model</strong>: Usage-based compute</li>
+<li><strong>Pricing</strong>: $30/month free credits, then pay-per-compute</li>
+<li><strong>Revenue</strong>: Compute time + storage</li>
+<li><strong>Positioning</strong>: "AI infrastructure that developers love"</li>
+<li><strong>Gap</strong>: No financial rails for agents</li>
+</ul>
+
+<h3>Replicate  </h3>
+<ul>
+<li><strong>Model</strong>: Pay-per-inference</li>
+<li><strong>Pricing</strong>: Per-second billing for model usage</li>
+<li><strong>Revenue</strong>: Compute markup</li>
+<li><strong>Positioning</strong>: "Run AI models at scale"</li>
+<li><strong>Gap</strong>: No payment capabilities</li>
+</ul>
+
+<h3>Together AI</h3>
+<ul>
+<li><strong>Model</strong>: API-first inference</li>
+<li><strong>Pricing</strong>: Pay-per-token/request</li>
+<li><strong>Revenue</strong>: Model hosting markup</li>
+<li><strong>Gap</strong>: No financial tools</li>
+</ul>
+
+<h3>Hugging Face Inference Endpoints</h3>
+<ul>
+<li><strong>Model</strong>: Managed ML infrastructure</li>
+<li><strong>Pricing</strong>: Pay-per-hour + compute</li>
+<li><strong>Revenue</strong>: Infrastructure hosting</li>
+<li><strong>Gap</strong>: No spend management</li>
+</ul>
+
+<h3>OpenAI API</h3>
+<ul>
+<li><strong>Model</strong>: API consumption</li>
+<li><strong>Pricing</strong>: Pay-per-token</li>
+<li><strong>Revenue</strong>: API usage fees</li>
+<li><strong>Gap</strong>: No financial management tools</li>
+</ul>
+
+<hr>
+
+<h2>Top 5 AI Agent Infrastructure Competitors</h2>
+
+<ul>
+<li><strong>Modal Labs</strong> - Serverless compute for AI workloads</li>
+</ul>
+<ul>
+<li><strong>Replicate</strong> - Model hosting and inference platform</li>
+</ul>
+<ul>
+<li><strong>Together AI</strong> - Inference API and model hosting</li>
+</ul>
+<ul>
+<li><strong>Runpod</strong> - GPU cloud infrastructure</li>
+</ul>
+<ul>
+<li><strong>Anyscale</strong> - Ray-based distributed computing platform</li>
+</ul>
+
+<p><strong>Key Finding</strong>: None offer financial rails. All focus purely on compute/inference.</p>
+
+<hr>
+
+<h2>AgentPay Positioning</h2>
+
+<p><strong>"Ramp for AI Agents"</strong> - The only financial infrastructure built specifically for autonomous AI systems.</p>
+
+<h3>Unique Value Props:</h3>
+<ul>
+<li><strong>API-First</strong>: Designed for programmatic access, not human dashboards</li>
+</ul>
+<ul>
+<li><strong>Machine Speed</strong>: Instant card provisioning and budget adjustments</li>
+</ul>
+<ul>
+<li><strong>Agent-Aware</strong>: Understands AI agent spending patterns and needs</li>
+</ul>
+<ul>
+<li><strong>Autonomous</strong>: Self-serve onboarding with no sales calls required</li>
+</ul>
+<ul>
+<li><strong>Scalable</strong>: Handle thousands of agents per customer</li>
+</ul>
+
+<hr>
+
+<h2>Pricing Strategy Recommendation</h2>
+
+<h3>Core Philosophy</h3>
+<ul>
+<li><strong>Self-serve first</strong>: No demos, no sales calls for <$10k ARR accounts</li>
+<li><strong>Usage-based foundation</strong>: Pay-as-you-grow model aligns with AI startup budgets</li>
+<li><strong>Land and expand</strong>: Start with simple virtual cards, expand to full financial OS</li>
+</ul>
+
+<h3>Pricing Tiers</h3>
+
+<h4><strong>Free Tier: "Agent Starter"</strong> </h4>
+<ul>
+<li><strong>Price</strong>: $0/month</li>
+<li><strong>Limits</strong>: 5 virtual cards, $1,000 total monthly spend</li>
+<li><strong>Features</strong>: Basic API, virtual cards only, standard integrations</li>
+<li><strong>Target</strong>: Individual developers, proof-of-concepts</li>
+<li><strong>Conversion Goal</strong>: 5% convert to paid within 60 days</li>
+</ul>
+
+<h4><strong>Growth Tier: "Agent Pro"</strong></h4>
+<ul>
+<li><strong>Price</strong>: $29/month + 0.5% of spend over $5,000/month</li>
+<li><strong>Limits</strong>: 50 virtual cards, $25,000 monthly spend</li>
+<li><strong>Features</strong>: Physical cards, advanced controls, Slack/Discord integrations</li>
+<li><strong>Target</strong>: Early-stage startups with <10 agents</li>
+<li><strong>Revenue Target</strong>: 70% of customers, $50k ARR average</li>
+</ul>
+
+<h4><strong>Scale Tier: "Agent Fleet"</strong></h4>
+<ul>
+<li><strong>Price</strong>: $299/month + 0.3% of spend over $50,000/month</li>
+<li><strong>Limits</strong>: Unlimited cards, $500,000 monthly spend</li>
+<li><strong>Features</strong>: Custom budgets, white-label cards, dedicated support</li>
+<li><strong>Target</strong>: Growth companies with 10-100 agents</li>
+<li><strong>Revenue Target</strong>: 25% of customers, $500k ARR average</li>
+</ul>
+
+<h4><strong>Enterprise: "Agent Infrastructure"</strong></h4>
+<ul>
+<li><strong>Price</strong>: Custom (starting $2,999/month)</li>
+<li><strong>Limits</strong>: Unlimited everything</li>
+<li><strong>Features</strong>: Multi-entity, custom integrations, SLA guarantees</li>
+<li><strong>Target</strong>: Large enterprises with 100+ agents</li>
+<li><strong>Revenue Target</strong>: 5% of customers, $2M+ ARR average</li>
+</ul>
+
+<h3>Revenue Model Components</h3>
+
+<ul>
+<li><strong>Monthly Subscription</strong>: Base SaaS fee (60% of revenue)</li>
+</ul>
+<ul>
+<li><strong>Interchange</strong>: 1.5% of all spend (30% of revenue)</li>
+</ul>
+<ul>
+<li><strong>Card Fees</strong>: $0.50/virtual card, $5/physical card (5% of revenue)</li>
+</ul>
+<ul>
+<li><strong>Add-ons</strong>: Premium integrations, extra seats (5% of revenue)</li>
+</ul>
+
+<h3>Pricing Justification</h3>
+
+<h4>Why Percentage of Spend?</h4>
+<ul>
+<li><strong>Aligns incentives</strong>: We win when agents spend successfully</li>
+<li><strong>Scales with value</strong>: More spend = more risk/compliance work for us</li>
+<li><strong>Industry standard</strong>: Follows Ramp/Brex model but with AI-first pricing</li>
+</ul>
+
+<h4>Why Start at $29?</h4>
+<ul>
+<li><strong>Above Mercury Starter</strong>: Positions us as premium</li>
+<li><strong>Below Mercury Pro</strong>: Accessible for startups</li>
+<li><strong>Covers infrastructure</strong>: Real cost of card issuing and compliance</li>
+</ul>
+
+<h4>Why Free Tier?</h4>
+<ul>
+<li><strong>Viral growth</strong>: Developers try before buying</li>
+<li><strong>Data collection</strong>: Learn agent spending patterns</li>
+<li><strong>Network effects</strong>: More agents = better product</li>
+</ul>
+
+<hr>
+
+<h2>Go-to-Market Pricing Strategy</h2>
+
+<h3>Phase 1: Price Discovery (Months 1-6)</h3>
+<ul>
+<li>Launch with single "Early Access" tier at $99/month</li>
+<li>No usage caps to understand demand elasticity</li>
+<li>Manual pricing for first 50 customers to optimize</li>
+</ul>
+
+<h3>Phase 2: Segmentation (Months 6-12)  </h3>
+<ul>
+<li>Introduce Free + Growth tiers based on learnings</li>
+<li>Add percentage-of-spend component</li>
+<li>Optimize for self-serve conversion</li>
+</ul>
+
+<h3>Phase 3: Enterprise (Year 2)</h3>
+<ul>
+<li>Launch Scale + Enterprise tiers</li>
+<li>Add dedicated support and custom features</li>
+<li>Target $1M+ ARR accounts</li>
+</ul>
+
+<h3>Phase 4: Platform (Year 2+)</h3>
+<ul>
+<li>Usage-based pricing for high-volume customers</li>
+<li>Revenue-share partnerships with AI platforms</li>
+<li>White-label solutions for infrastructure providers</li>
+</ul>
+
+<hr>
+
+<h2>Competitive Response Predictions</h2>
+
+<h3>Stripe Response</h3>
+<ul>
+<li>Likely to build "Stripe Agents" product within 12 months</li>
+<li>Will leverage existing issuing infrastructure</li>
+<li>Threat level: High (but requires 2+ years to match our feature depth)</li>
+</ul>
+
+<h3>Ramp/Brex Response  </h3>
+<ul>
+<li>Will add "API access" to existing products</li>
+<li>Won't rebuild core architecture for agents</li>
+<li>Threat level: Medium (incremental features, not purpose-built)</li>
+</ul>
+
+<h3>New Entrants</h3>
+<ul>
+<li>Expect 3-5 "AgentPay clones" within 18 months</li>
+<li>Will copy features but lack our head start and customer insight</li>
+<li>Threat level: Low-Medium (we'll be 2-3 years ahead)</li>
+</ul>
+
+<hr>
+
+<h2>Success Metrics & Targets</h2>
+
+<h3>Year 1 Targets</h3>
+<ul>
+<li><strong>ARR</strong>: $500k (200 paying customers averaging $2.5k ARR)</li>
+<li><strong>Gross Margin</strong>: 75% (standard fintech margins)</li>
+<li><strong>CAC Payback</strong>: 12 months (driven by product-led growth)</li>
+<li><strong>Net Revenue Retention</strong>: 130% (expansion into higher tiers)</li>
+</ul>
+
+<h3>Year 2 Targets  </h3>
+<ul>
+<li><strong>ARR</strong>: $5M (1,000 customers, 50% in Scale+ tiers)</li>
+<li><strong>Gross Margin</strong>: 80% (improved unit economics at scale)</li>
+<li><strong>CAC Payback</strong>: 8 months (better self-serve conversion)</li>
+<li><strong>Net Revenue Retention</strong>: 150% (land and expand success)</li>
+</ul>
+
+<h3>Key Leading Indicators</h3>
+<ul>
+<li><strong>Free to Paid Conversion</strong>: >5% (industry benchmark)</li>
+<li><strong>Monthly Spend per Customer</strong>: >$10k (healthy usage)</li>
+<li><strong>API Calls per Day</strong>: >1M (product adoption)</li>
+<li><strong>Cards Issued per Month</strong>: >10k (scale metric)</li>
+</ul>
+
+<hr>
+
+<h2>Next Steps</h2>
+
+<ul>
+<li><strong>Validate with Beta Customers</strong>: Test $99 early access pricing with first 10 customers</li>
+</ul>
+<ul>
+<li><strong>Build Pricing Infrastructure</strong>: Implement usage tracking and billing automation</li>
+</ul>
+<ul>
+<li><strong>Competitive Intelligence</strong>: Monitor incumbent responses and new entrants</li>
+</ul>
+<ul>
+<li><strong>Customer Development</strong>: Interview churned customers to refine value props</li>
+</ul>
+<ul>
+<li><strong>Partnership Strategy</strong>: Explore revenue-share deals with AI platform providers</li>
+</ul>
+
+<p><strong>Bottom Line</strong>: AgentPay has a narrow window to establish market leadership before incumbents respond. Our pricing must balance growth (accessible to startups) with sustainability (high gross margins) while building the category we're creating.</p>
+
+<hr>
+
+<p>*Analysis by Maren, Chief Sales Officer  </p>
+<p>Updated: February 2026*</p>
+
+  </div>
+</div>
+</body>
+</html>
