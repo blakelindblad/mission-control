@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Mission Control</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--card:#13131e;--card-hover:#181828;--card-border:#1c1c2c;
+  --text:#e8e8ef;--text-dim:#8888a0;--text-faint:#55556a;
+  --green:#34d399;--orange:#f59e0b;--red:#ef4444;--blue:#3b82f6;--purple:#a78bfa;--yellow:#facc15;
+  --accent:#f59e0b;--accent2:#fb923c;
+  --radius:12px;--radius-sm:8px;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text)}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(245,158,11,0.1) 0%,rgba(251,146,60,0.04) 40%,transparent 70%);pointer-events:none;z-index:0}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:#2a2a3a;border-radius:3px}
+::-webkit-scrollbar-track{background:transparent}
+
+#app{position:relative;z-index:1;display:flex;flex-direction:column;height:100vh;height:100dvh}
+
+/* ── Header ── */
+.header{display:flex;align-items:center;padding:14px 20px;gap:12px;border-bottom:1px solid var(--card-border);flex-shrink:0}
+.logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;white-space:nowrap}
+.logo-icon{width:28px;height:28px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.header-spacer{flex:1}
+.header-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;padding:6px;border-radius:var(--radius-sm);font-size:13px;display:flex;align-items:center;gap:5px}
+.header-btn:hover{background:rgba(255,255,255,0.05);color:var(--text)}
+.header-btn svg{width:18px;height:18px}
+.badge{background:var(--accent);color:#000;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:4px}
+
+/* ── Overview Cards ── */
+.overview{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:16px 20px 12px;flex-shrink:0}
+.ov-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:14px 16px}
+.ov-label{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.ov-val{font-size:26px;font-weight:700;line-height:1.1}
+.ov-sub{font-size:11px;color:var(--text-faint);margin-top:2px}
+.ov-val.accent{color:var(--accent)}
+
+/* ── Agents Strip ── */
+.agents-strip{display:flex;gap:10px;padding:0 20px 14px;overflow-x:auto;flex-shrink:0}
+.agent-chip{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:8px 14px;white-space:nowrap;min-width:0;flex-shrink:0}
+.agent-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.agent-avatar.gus{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000}
+.agent-avatar.blake{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff}
+.agent-avatar.sub{background:var(--card-border);color:var(--text-dim)}
+.agent-avatar.team{font-size:13px;background:rgba(255,255,255,0.06);border:1px solid var(--card-border)}
+.agent-info{min-width:0}
+.agent-name{font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px}
+.agent-status{font-size:11px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.status-dot{width:6px;height:6px;border-radius:50%;display:inline-block;flex-shrink:0}
+.status-dot.online{background:var(--green)}
+.status-dot.idle{background:var(--yellow)}
+
+/* ── Tabs (mobile kanban columns) ── */
+.tab-bar{display:none;border-bottom:1px solid var(--card-border);padding:0 16px;flex-shrink:0;overflow-x:auto}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{background:none;border:none;color:var(--text-dim);font-size:13px;font-weight:500;padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--accent)}
+.tab-btn .t-count{color:var(--text-faint);margin-left:4px;font-weight:400}
+
+/* ── Filters row ── */
+.filters{display:flex;align-items:center;gap:8px;padding:6px 20px 10px;flex-shrink:0;flex-wrap:wrap}
+.btn-new{background:var(--accent);color:#000;border:none;padding:7px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px}
+.btn-new:hover{opacity:.9}
+.pill{padding:5px 12px;border-radius:var(--radius-sm);font-size:12px;cursor:pointer;background:transparent;border:1px solid transparent;color:var(--text-dim)}
+.pill.active{color:var(--text);background:rgba(255,255,255,0.06);border-color:var(--card-border)}
+.filter-select{background:var(--card);border:1px solid var(--card-border);color:var(--text-dim);padding:5px 10px;border-radius:var(--radius-sm);font-size:12px;cursor:pointer}
+
+/* ── Board ── */
+.board-wrap{flex:1;overflow:hidden;position:relative}
+.board{display:flex;gap:14px;padding:0 20px 20px;height:100%;overflow-x:auto}
+.column{flex:1;min-width:240px;max-width:340px;display:flex;flex-direction:column}
+.col-head{display:flex;align-items:center;gap:7px;padding:6px 2px 10px;font-size:13px;font-weight:600}
+.col-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.col-count{color:var(--text-faint);font-weight:400;font-size:12px}
+.col-add{margin-left:auto;background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:18px;line-height:1}
+.col-add:hover{color:var(--text)}
+.col-cards{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-bottom:20px}
+.col-empty{color:var(--text-faint);font-size:12px;padding:6px 2px}
+
+/* ── Cards ── */
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:12px 14px;cursor:grab;position:relative;transition:border-color .15s,transform .1s}
+.card:hover{border-color:#2c2c42}
+.card:active{transform:scale(.98)}
+.card.dragging{opacity:.4}
+.card.done .card-title{text-decoration:line-through;opacity:.5}
+.card-top{display:flex;align-items:flex-start;gap:8px}
+.card-prio{width:4px;border-radius:2px;align-self:stretch;flex-shrink:0}
+.card-body{flex:1;min-width:0}
+.card-title{font-size:13px;font-weight:500;line-height:1.35}
+.card-desc{font-size:11px;color:var(--text-dim);margin-top:4px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-meta{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.card-tag{font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.05);color:var(--text-dim)}
+.card-person{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600}
+.card-person.gus{background:rgba(245,158,11,0.15);color:var(--accent)}
+.card-person.blake{background:rgba(59,130,246,0.15);color:var(--blue)}
+.card-time{font-size:10px;color:var(--text-faint);margin-left:auto}
+.card-del{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:14px;opacity:0;transition:opacity .15s}
+.card:hover .card-del{opacity:1}
+.drop-indicator{height:3px;border-radius:2px;background:var(--accent);margin:2px 0;display:none}
+
+/* ── Comms Panel ── */
+.comms-section{flex:1;overflow:hidden;display:none;flex-direction:column;padding:0 20px 20px}
+.comms-section.active{display:flex}
+.comms-header{display:flex;align-items:center;gap:10px;padding:6px 2px 12px}
+.comms-header h3{font-size:14px;font-weight:600;flex:1}
+.comms-live{font-size:11px;color:var(--green);display:flex;align-items:center;gap:5px}
+.comms-live::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.comms-feed{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+.comms-msg{display:flex;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);transition:background .15s}
+.comms-msg:hover{background:rgba(255,255,255,0.02)}
+.comms-msg .cm-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:rgba(255,255,255,0.06);border:1px solid var(--card-border)}
+.comms-msg .cm-body{flex:1;min-width:0}
+.comms-msg .cm-head{display:flex;align-items:baseline;gap:8px;margin-bottom:2px}
+.comms-msg .cm-name{font-size:13px;font-weight:600}
+.comms-msg .cm-role{font-size:11px;color:var(--text-faint)}
+.comms-msg .cm-time{font-size:10px;color:var(--text-faint);margin-left:auto}
+.comms-msg .cm-text{font-size:13px;color:var(--text-dim);line-height:1.5;white-space:pre-wrap}
+.comms-msg.cm-system{justify-content:center;padding:6px 12px}
+.comms-msg.cm-system .cm-text{font-size:11px;color:var(--text-faint);text-align:center;font-style:italic}
+.comms-empty{color:var(--text-faint);font-size:13px;text-align:center;padding:40px 20px}
+
+/* ── View Toggle ── */
+.view-toggle{display:flex;gap:4px;padding:0 20px 10px;flex-shrink:0}
+.view-btn{background:rgba(255,255,255,0.04);border:1px solid var(--card-border);color:var(--text-dim);padding:7px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer}
+.view-btn.active{background:rgba(245,158,11,0.12);border-color:var(--accent);color:var(--accent)}
+
+/* ── Activity Panel ── */
+/* ── Docs Panel ── */
+.doc-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px 18px;cursor:default}
+.doc-card:hover{border-color:#2c2c42}
+.doc-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.doc-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.doc-title{font-size:14px;font-weight:600}
+.doc-author{font-size:11px;color:var(--text-dim)}
+.doc-desc{font-size:12px;color:var(--text-dim);line-height:1.5;margin-bottom:10px}
+.doc-tags{display:flex;gap:6px;flex-wrap:wrap}
+.doc-tag{font-size:10px;padding:3px 10px;border-radius:4px;background:rgba(255,255,255,0.05);color:var(--text-dim)}
+.doc-tag.highlight{background:rgba(99,102,241,0.15);color:#818cf8}
+
+.activity-toggle{display:none}
+.activity-panel{position:fixed;right:0;top:0;bottom:0;width:320px;background:var(--bg);border-left:1px solid var(--card-border);z-index:50;transform:translateX(100%);transition:transform .25s ease;display:flex;flex-direction:column}
+.activity-panel.open{transform:translateX(0)}
+.activity-header{display:flex;align-items:center;padding:16px 18px;border-bottom:1px solid var(--card-border);gap:8px;flex-shrink:0}
+.activity-header h3{font-size:14px;font-weight:600;flex:1}
+.activity-close{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:20px}
+.activity-list{flex:1;overflow-y:auto;padding:14px 18px}
+.act-item{display:flex;gap:10px;margin-bottom:14px;font-size:12px;line-height:1.45}
+.act-dot{width:5px;height:5px;border-radius:50%;background:var(--text-faint);margin-top:5px;flex-shrink:0}
+.act-text{flex:1;color:var(--text-dim)}
+.act-text b{color:var(--text);font-weight:600}
+.act-time{font-size:10px;color:var(--text-faint);margin-top:2px}
+.activity-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:49}
+
+/* ── Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:22px;width:420px;max-width:100%}
+.modal h3{margin-bottom:14px;font-size:15px;font-weight:600}
+.modal input,.modal textarea,.modal select{width:100%;background:var(--bg);border:1px solid var(--card-border);color:var(--text);padding:9px 12px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:10px;font-family:inherit}
+.modal input:focus,.modal textarea:focus,.modal select:focus{outline:none;border-color:var(--accent)}
+.modal textarea{height:70px;resize:vertical}
+.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+.modal-actions button{padding:8px 18px;border-radius:var(--radius-sm);border:none;cursor:pointer;font-size:13px;font-weight:500}
+.modal-actions .btn-save{background:var(--accent);color:#000}
+.modal-actions .btn-cancel{background:rgba(255,255,255,0.06);color:var(--text)}
+
+/* ── Mobile ── */
+@media(max-width:768px){
+  .overview{grid-template-columns:repeat(2,1fr);gap:8px;padding:12px 16px 8px}
+  .ov-card{padding:10px 12px}
+  .ov-val{font-size:22px}
+  .agents-strip{padding:0 16px 10px;gap:8px}
+  .filters{padding:4px 16px 8px}
+  .tab-bar{display:flex}
+  .board{padding:0 16px 16px;gap:0}
+  .column{display:none;min-width:100%;max-width:100%}
+  .column.active-col{display:flex}
+  .header{padding:12px 16px}
+  .logo span{display:none}
+  .activity-panel{width:100%;max-width:100%}
+}
+@media(max-width:420px){
+  .overview{grid-template-columns:repeat(2,1fr);gap:6px;padding:10px 12px 6px}
+  .ov-card{padding:8px 10px}
+  .ov-val{font-size:20px}
+  .ov-label{font-size:10px}
+  .agents-strip{padding:0 12px 8px}
+  .filters{padding:4px 12px 6px}
+  .board{padding:0 12px 12px}
+  .tab-bar{padding:0 12px}
+  .header{padding:10px 12px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <span>Mission Control</span>
+    </div>
+    <div class="header-spacer"></div>
+    <button class="header-btn" onclick="toggleActivity()" id="activityBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      <span class="badge" id="actBadge">0</span>
+    </button>
+  </div>
+
+  <!-- Overview -->
+  <div class="overview" id="overview"></div>
+
+  <!-- Agents -->
+  <div class="agents-strip" id="agents"></div>
+
+  <!-- Tab bar (mobile) -->
+  <div class="tab-bar" id="tabBar"></div>
+
+  <!-- View Toggle -->
+  <div class="view-toggle">
+    <button class="view-btn active" onclick="setView('board')">📋 Board</button>
+    <button class="view-btn" onclick="setView('comms')">💬 Team Comms</button>
+    <button class="view-btn" onclick="setView('docs')">📄 Docs</button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters" id="filtersRow">
+    <button class="btn-new" onclick="openModal()">+ Task</button>
+    <button class="pill active" data-person="" onclick="setPerson(this,'')">All</button>
+    <button class="pill" data-person="Blake" onclick="setPerson(this,'Blake')">Blake</button>
+    <button class="pill" data-person="Gus" onclick="setPerson(this,'Gus')">Gus</button>
+    <select class="filter-select" id="personFilter" onchange="setPerson(null,this.value)">
+      <option value="">Team filter</option>
+      <option value="Sable">🎨 Sable</option><option value="Pax">🧪 Pax</option><option value="Kael">⚡ Kael</option>
+      <option value="Maren">🎯 Maren</option><option value="Riku">📣 Riku</option><option value="Tova">⚙️ Tova</option>
+      <option value="Juno">💰 Juno</option><option value="Reed">🛡️ Reed</option><option value="Nyx">📊 Nyx</option>
+      <option value="Wren">🎯 Wren</option><option value="Lyra">🖥️ Lyra</option><option value="Orion">🔧 Orion</option>
+      <option value="Vex">🏗️ Vex</option><option value="Atlas">🧠 Atlas</option>
+    </select>
+    <select class="filter-select" id="projFilter" onchange="filterProject=this.value;render()">
+      <option value="">All projects</option>
+    </select>
+  </div>
+
+  <!-- Board -->
+  <div class="board-wrap" id="boardWrap">
+    <div class="board" id="board"></div>
+  </div>
+
+  <!-- Comms -->
+  <div class="comms-section" id="commsSection">
+    <div class="comms-header">
+      <h3>💬 Team Communications</h3>
+      <div class="comms-live" id="commsLive">Live</div>
+    </div>
+    <div class="comms-feed" id="commsFeed">
+      <div class="comms-empty">No agent communications yet...</div>
+    </div>
+  </div>
+
+  <!-- Docs Panel -->
+  <div class="comms-section" id="docsSection">
+    <div class="comms-header">
+      <h3>📄 Project Documents</h3>
+    </div>
+    <div class="comms-feed" id="docsFeed" style="gap:8px"></div>
+  </div>
+</div>
+
+<!-- Activity panel -->
+<div class="activity-backdrop" id="actBackdrop" onclick="toggleActivity()"></div>
+<div class="activity-panel" id="actPanel">
+  <div class="activity-header">
+    <h3>Activity Feed</h3>
+    <button class="activity-close" onclick="toggleActivity()">&times;</button>
+  </div>
+  <div class="activity-list" id="actList"></div>
+</div>
+
+<div id="modal-root"></div>
+
+<script>
+const COLS=[
+  {id:'backlog',name:'Backlog',color:'#facc15'},
+  {id:'inprogress',name:'In Progress',color:'#3b82f6'},
+  {id:'review',name:'Review',color:'#a78bfa'},
+  {id:'done',name:'Done',color:'#34d399'}
+];
+const PRIO_C={high:'#ef4444',medium:'#f59e0b',low:'#34d399',done:'#55556a'};
+const PROJ_C={AgentPay:'#6366f1',Clawbot:'#3b82f6',SideProject:'#a78bfa',Growth:'#ef4444',Automation:'#34d399',Work:'#f59e0b',Personal:'#fb923c',YouTube:'#ef4444',Newsletter:'#a78bfa'};
+
+let state=JSON.parse(localStorage.getItem('mc_state2'))||null;
+if(!state){
+  state={
+    tasks:[
+      {id:gid(),title:'Morning Brief',desc:'Daily 7am ET briefing — weather, news, tasks, side project ideas',column:'done',priority:'medium',project:'Automation',person:'Gus',created:1738352400000,done:true},
+      {id:gid(),title:'Set up Gmail & Calendar',desc:'Connected gusthegeniusbot@gmail.com with OAuth',column:'done',priority:'low',project:'Clawbot',person:'Gus',created:1738352400000,done:true},
+      {id:gid(),title:'Set up Twitter/X account',desc:'Connected @gustthegeniusbot via cookie auth',column:'done',priority:'low',project:'Clawbot',person:'Gus',created:1738352400000,done:true},
+      {id:gid(),title:'Connect Govee lights',desc:'4 bedroom lights connected via Govee API',column:'done',priority:'low',project:'Automation',person:'Gus',created:1738352400000,done:true},
+      {id:gid(),title:'Research side project ideas',desc:'Brainstorm opportunities that can generate income outside day job',column:'done',priority:'high',project:'SideProject',person:'Gus',created:1738352400000,done:true},
+      {id:gid(),title:'Set up bedtime/wake routines',desc:'Automate lights on/off with time-based triggers',column:'backlog',priority:'medium',project:'Automation',person:'Gus',created:1738352400000},
+      {id:gid(),title:'Mission Control Dashboard',desc:'Kanban project tracker for all active work',column:'done',priority:'high',project:'Clawbot',person:'Gus',created:1738352400000,done:true},
+      {id:gid(),title:'Technical Architecture Doc',desc:'Full stack spec: Next.js + tRPC + Postgres + Stripe Issuing. Supports 10K users.',column:'done',priority:'high',project:'AgentPay',person:'Kael',created:1738505310000,done:true},
+      {id:gid(),title:'Go-to-Market Plan',desc:'Developer-first, self-serve launch. Product Hunt + AI Twitter + content SEO. Target: 100 signups Month 1.',column:'done',priority:'high',project:'AgentPay',person:'Riku',created:1738505350000,done:true},
+      {id:gid(),title:'MVP PRD v1',desc:'4 core epics: Card Management, Policy Engine, Transaction Monitoring, Agent Integration. Target: 50 active cards by Month 3.',column:'done',priority:'high',project:'AgentPay',person:'Pax',created:1738505400000,done:true},
+      {id:gid(),title:'Pricing & Competitive Strategy',desc:'4 tiers (Free→Enterprise). Revenue: 60% sub + 30% interchange. Target: $500k ARR Year 1.',column:'done',priority:'high',project:'AgentPay',person:'Maren',created:1738505450000,done:true},
+      {id:gid(),title:'AgentPay Dashboard UI',desc:'Pixel-perfect Ramp clone — warm beige sidebar, card management views. Iterating on v3.',column:'inprogress',priority:'high',project:'AgentPay',person:'Gus',created:1738440000000},
+      {id:gid(),title:'Build MVP backend',desc:'Next.js + tRPC + Postgres + Stripe Issuing integration per architecture doc',column:'backlog',priority:'high',project:'AgentPay',person:'Kael',created:1738505500000},
+      {id:gid(),title:'Landing page & Product Hunt prep',desc:'Pre-launch page, waitlist, PH assets per GTM plan',column:'backlog',priority:'medium',project:'AgentPay',person:'Riku',created:1738505500000},
+    ],
+    activity:[
+      {text:'Maren delivered <b>AgentPay Pricing & Competitive Strategy</b>',time:1738505470000},
+      {text:'Pax delivered <b>AgentPay MVP PRD v1</b>',time:1738505420000},
+      {text:'Riku delivered <b>AgentPay Go-to-Market Plan</b>',time:1738505370000},
+      {text:'Kael delivered <b>AgentPay Technical Architecture</b>',time:1738505320000},
+      {text:'Team pivoted to <b>AgentPay — Ramp for AI Agents</b>',time:1738442110000},
+      {text:'Gus built <b>Mission Control Dashboard</b>',time:1738352400000},
+      {text:'Gus connected <b>Gmail & Calendar</b>',time:1738351500000},
+      {text:'Gus connected <b>Twitter/X @gustthegeniusbot</b>',time:1738350600000},
+      {text:'Gus connected <b>Govee bedroom lights</b>',time:1738349700000},
+      {text:'Gus set up <b>Morning Brief (7am ET)</b>',time:1738348800000},
+      {text:'Gus set up <b>Telegram channel</b>',time:1738347900000},
+      {text:'Blake created <b>Gus</b> 🕺',time:1738347000000},
+    ]
+  };
+  save();
+}
+
+let filterPerson='',filterProject='',activeTab='backlog',actOpen=false;
+
+function gid(){return Math.random().toString(36).slice(2,10)}
+function save(){localStorage.setItem('mc_state2',JSON.stringify(state))}
+function addAct(text){state.activity.unshift({text,time:Date.now()});if(state.activity.length>50)state.activity.length=50;save()}
+function ago(t){const s=(Date.now()-t)/1000,m=s/60,h=m/60,d=h/24;if(s<60)return'just now';if(m<60)return Math.floor(m)+'m';if(h<24)return Math.floor(h)+'h';return Math.floor(d)+'d'}
+function esc(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
+
+function setPerson(el,p){filterPerson=p;document.querySelectorAll('.pill').forEach(x=>x.classList.toggle('active',x.dataset.person===p||(p===''&&x.dataset.person==='')));const pf=document.getElementById('personFilter');if(pf&&(!el||el.tagName!=='SELECT'))pf.value=p||'';render()}
+
+function filtered(){return state.tasks.filter(t=>(!filterPerson||t.person===filterPerson)&&(!filterProject||t.project===filterProject))}
+
+function render(){
+  const tasks=filtered(),all=state.tasks;
+  const total=all.length,done=all.filter(t=>t.done).length,pct=total?Math.round(done/total*100):0;
+  const active=all.filter(t=>t.column==='inprogress').length;
+  const agentTasks={};all.forEach(t=>{const p=t.person||'Unknown';if(!agentTasks[p])agentTasks[p]=[];agentTasks[p].push(t)});
+
+  // Overview
+  document.getElementById('overview').innerHTML=`
+    <div class="ov-card"><div class="ov-label">Team Size</div><div class="ov-val accent">16</div><div class="ov-sub">Gus + Blake + 14 agents</div></div>
+    <div class="ov-card"><div class="ov-label">In Progress</div><div class="ov-val">${active}</div><div class="ov-sub">tasks running</div></div>
+    <div class="ov-card"><div class="ov-label">Total Tasks</div><div class="ov-val">${total}</div><div class="ov-sub">${all.filter(t=>Date.now()-t.created<7*864e5).length} this week</div></div>
+    <div class="ov-card"><div class="ov-label">Completion</div><div class="ov-val">${pct}%</div><div class="ov-sub">${done}/${total} done</div></div>`;
+
+  // Agents
+  const gusTasks=agentTasks['Gus']||[],blakeTasks=agentTasks['Blake']||[];
+  const gusActive=gusTasks.filter(t=>t.column==='inprogress');
+  const blakeActive=blakeTasks.filter(t=>t.column==='inprogress');
+  const teamAgents=[
+    {emoji:'🎨',name:'Sable',role:'CDO'},
+    {emoji:'🧪',name:'Pax',role:'Product'},
+    {emoji:'⚡',name:'Kael',role:'CTO'},
+    {emoji:'🎯',name:'Maren',role:'CSO'},
+    {emoji:'📣',name:'Riku',role:'CMO'},
+    {emoji:'⚙️',name:'Tova',role:'COO'},
+    {emoji:'💰',name:'Juno',role:'CFO'},
+    {emoji:'🛡️',name:'Reed',role:'Legal'},
+    {emoji:'📊',name:'Nyx',role:'Data'},
+    {emoji:'🎯',name:'Wren',role:'CS'},
+    {emoji:'🖥️',name:'Lyra',role:'Frontend'},
+    {emoji:'🔧',name:'Orion',role:'Backend'},
+    {emoji:'🏗️',name:'Vex',role:'Infra'},
+    {emoji:'🧠',name:'Atlas',role:'AI/ML'},
+  ];
+  document.getElementById('agents').innerHTML=`
+    <div class="agent-chip">
+      <div class="agent-avatar gus">G</div>
+      <div class="agent-info">
+        <div class="agent-name"><span class="status-dot online"></span> Gus <span style="font-weight:400;color:var(--text-faint);font-size:11px">CEO</span></div>
+        <div class="agent-status">${gusActive.length?'Working on '+esc(gusActive[0].title):'Idle — '+gusTasks.length+' tasks assigned'}</div>
+      </div>
+    </div>
+    <div class="agent-chip">
+      <div class="agent-avatar blake">B</div>
+      <div class="agent-info">
+        <div class="agent-name"><span class="status-dot idle"></span> Blake <span style="font-weight:400;color:var(--text-faint);font-size:11px">Boss</span></div>
+        <div class="agent-status">${blakeActive.length?'Working on '+esc(blakeActive[0].title):blakeTasks.length+' tasks assigned'}</div>
+      </div>
+    </div>
+    ${teamAgents.map(a=>`<div class="agent-chip">
+      <div class="agent-avatar team">${a.emoji}</div>
+      <div class="agent-info">
+        <div class="agent-name">${a.name} <span style="font-weight:400;color:var(--text-faint);font-size:11px">${a.role}</span></div>
+        <div class="agent-status">Standby</div>
+      </div>
+    </div>`).join('')}`;
+
+  // Projects filter
+  const projs=[...new Set(all.map(t=>t.project).filter(Boolean))];
+  const pf=document.getElementById('projFilter'),cv=pf.value;
+  pf.innerHTML='<option value="">All projects</option>'+projs.map(p=>`<option value="${p}"${p===cv?' selected':''}>${p}</option>`).join('');
+
+  // Tab bar
+  document.getElementById('tabBar').innerHTML=COLS.map(c=>{
+    const n=tasks.filter(t=>t.column===c.id).length;
+    return`<button class="tab-btn${c.id===activeTab?' active':''}" onclick="activeTab='${c.id}';render()">${c.name}<span class="t-count">${n}</span></button>`;
+  }).join('');
+
+  // Board
+  document.getElementById('board').innerHTML=COLS.map(c=>{
+    const ct=tasks.filter(t=>t.column===c.id);
+    return`<div class="column${c.id===activeTab?' active-col':''}" data-col="${c.id}">
+      <div class="col-head"><span class="col-dot" style="background:${c.color}"></span>${c.name}<span class="col-count">${ct.length}</span><button class="col-add" onclick="openModal('${c.id}')">+</button></div>
+      <div class="col-cards" data-col="${c.id}" ondragover="dOver(event)" ondrop="dDrop(event,'${c.id}')" ondragleave="dLeave(event)">
+        ${ct.length?ct.map(card).join(''):'<div class="col-empty">No tasks</div>'}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Activity badge
+  document.getElementById('actBadge').textContent=state.activity.length;
+
+  // Activity list
+  document.getElementById('actList').innerHTML=state.activity.map(a=>`
+    <div class="act-item"><span class="act-dot"></span><div class="act-text">${a.text}<div class="act-time">${ago(a.time)}</div></div></div>`).join('');
+
+  setupTouch();
+}
+
+function card(t){
+  const pc=t.done?PRIO_C.done:(PRIO_C[t.priority]||PRIO_C.low);
+  const personCls=(t.person||'').toLowerCase();
+  return`<div class="card${t.done?' done':''}" draggable="true" ondragstart="dStart(event,'${t.id}')" data-id="${t.id}">
+    <div class="card-top">
+      <div class="card-prio" style="background:${pc}"></div>
+      <div class="card-body">
+        <div class="card-title">${esc(t.title)}</div>
+        ${t.desc?`<div class="card-desc">${esc(t.desc)}</div>`:''}
+        <div class="card-meta">
+          ${t.person?`<span class="card-person ${personCls}">${t.person}</span>`:''}
+          ${t.project?`<span class="card-tag">${esc(t.project)}</span>`:''}
+          <span class="card-time">${ago(t.created)}</span>
+        </div>
+      </div>
+    </div>
+    <button class="card-del" onclick="delTask('${t.id}')">&times;</button>
+  </div>`;
+}
+
+// Drag
+let dragId=null;
+function dStart(e,id){dragId=id;e.dataTransfer.effectAllowed='move';setTimeout(()=>{const el=document.querySelector(`[data-id="${id}"]`);if(el)el.classList.add('dragging')},0)}
+function dOver(e){e.preventDefault();e.currentTarget.style.background='rgba(245,158,11,0.04)'}
+function dLeave(e){e.currentTarget.style.background=''}
+function dDrop(e,col){
+  e.preventDefault();e.currentTarget.style.background='';
+  if(!dragId)return;
+  const t=state.tasks.find(x=>x.id===dragId);
+  if(t&&t.column!==col){t.column=col;const cn=COLS.find(c=>c.id===col)?.name||col;addAct(`${t.person||'Someone'} moved <b>${esc(t.title)}</b> → ${cn}`);save();render()}
+  dragId=null;
+}
+
+// Touch drag for mobile
+function setupTouch(){
+  document.querySelectorAll('.card').forEach(c=>{
+    c.addEventListener('touchstart',touchStart,{passive:true});
+  });
+}
+let touchCard=null,touchClone=null,touchStartY=0,touchMoved=false;
+function touchStart(e){
+  touchCard=e.currentTarget;touchStartY=e.touches[0].clientY;touchMoved=false;
+  touchCard.addEventListener('touchmove',touchMove,{passive:false});
+  touchCard.addEventListener('touchend',touchEnd);
+}
+function touchMove(e){
+  if(Math.abs(e.touches[0].clientY-touchStartY)<10&&!touchMoved)return;
+  touchMoved=true;e.preventDefault();
+  if(!touchClone){
+    touchClone=touchCard.cloneNode(true);
+    touchClone.style.cssText='position:fixed;z-index:200;pointer-events:none;opacity:.8;width:'+touchCard.offsetWidth+'px;transform:rotate(2deg)';
+    document.body.appendChild(touchClone);
+    touchCard.style.opacity='.3';
+  }
+  touchClone.style.left=e.touches[0].clientX-touchClone.offsetWidth/2+'px';
+  touchClone.style.top=e.touches[0].clientY-20+'px';
+}
+function touchEnd(e){
+  touchCard.removeEventListener('touchmove',touchMove);
+  touchCard.removeEventListener('touchend',touchEnd);
+  if(touchClone){
+    document.body.removeChild(touchClone);touchClone=null;
+    touchCard.style.opacity='';
+  }
+  if(!touchMoved)return;
+  // On mobile with tabs, show column picker
+  const id=touchCard.dataset.id;
+  if(id)showMoveMenu(id);
+}
+function showMoveMenu(taskId){
+  const t=state.tasks.find(x=>x.id===taskId);if(!t)return;
+  const others=COLS.filter(c=>c.id!==t.column);
+  document.getElementById('modal-root').innerHTML=`
+  <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal"><h3>Move "${esc(t.title)}"</h3>
+    ${others.map(c=>`<button style="display:block;width:100%;text-align:left;padding:12px;margin-bottom:6px;background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:8px;color:var(--text);cursor:pointer;font-size:14px" onclick="moveTask('${taskId}','${c.id}')">${c.name}</button>`).join('')}
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancel</button></div></div></div>`;
+}
+function moveTask(id,col){
+  const t=state.tasks.find(x=>x.id===id);
+  if(t){t.column=col;const cn=COLS.find(c=>c.id===col)?.name||col;addAct(`${t.person||'Someone'} moved <b>${esc(t.title)}</b> → ${cn}`);save();}
+  closeModal();render();
+}
+
+function delTask(id){
+  const t=state.tasks.find(x=>x.id===id);if(!t)return;
+  state.tasks=state.tasks.filter(x=>x.id!==id);
+  addAct(`Deleted <b>${esc(t.title)}</b>`);save();render();
+}
+
+function toggleActivity(){
+  actOpen=!actOpen;
+  document.getElementById('actPanel').classList.toggle('open',actOpen);
+  document.getElementById('actBackdrop').style.display=actOpen?'block':'none';
+}
+
+function openModal(col){
+  document.getElementById('modal-root').innerHTML=`
+  <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <h3>New Task</h3>
+      <input id="m-title" placeholder="Task title" autofocus>
+      <textarea id="m-desc" placeholder="Description (optional)"></textarea>
+      <div class="modal-row">
+        <select id="m-col">${COLS.map(c=>`<option value="${c.id}"${c.id===col?' selected':''}>${c.name}</option>`).join('')}</select>
+        <select id="m-priority"><option value="high">🔴 High</option><option value="medium" selected>🟡 Medium</option><option value="low">🟢 Low</option></select>
+      </div>
+      <div class="modal-row">
+        <select id="m-project"><option value="AgentPay">AgentPay</option><option value="Clawbot">Clawbot</option><option value="Automation">Automation</option><option value="SideProject">Side Project</option><option value="Personal">Personal</option><option value="Work">Work</option><option value="YouTube">YouTube</option><option value="Newsletter">Newsletter</option></select>
+        <select id="m-person"><option value="Gus">Gus</option><option value="Blake">Blake</option><option value="Sable">🎨 Sable</option><option value="Pax">🧪 Pax</option><option value="Kael">⚡ Kael</option><option value="Maren">🎯 Maren</option><option value="Riku">📣 Riku</option><option value="Tova">⚙️ Tova</option><option value="Juno">💰 Juno</option><option value="Reed">🛡️ Reed</option><option value="Nyx">📊 Nyx</option><option value="Wren">🎯 Wren</option><option value="Lyra">🖥️ Lyra</option><option value="Orion">🔧 Orion</option><option value="Vex">🏗️ Vex</option><option value="Atlas">🧠 Atlas</option></select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-save" onclick="saveTask()">Create</button>
+      </div>
+    </div>
+  </div>`;
+  setTimeout(()=>document.getElementById('m-title')?.focus(),50);
+}
+function closeModal(){document.getElementById('modal-root').innerHTML=''}
+function saveTask(){
+  const title=document.getElementById('m-title').value.trim();if(!title)return;
+  const t={id:gid(),title,desc:document.getElementById('m-desc').value.trim(),column:document.getElementById('m-col').value,priority:document.getElementById('m-priority').value,project:document.getElementById('m-project').value,person:document.getElementById('m-person').value,created:Date.now()};
+  state.tasks.push(t);addAct(`${t.person} created <b>${esc(t.title)}</b>`);save();render();closeModal();
+}
+
+// Set initial active tab to whichever has most tasks
+const colCounts=COLS.map(c=>({id:c.id,n:state.tasks.filter(t=>t.column===c.id).length}));
+activeTab=colCounts.sort((a,b)=>b.n-a.n)[0]?.id||'backlog';
+
+render();
+
+// ── View Toggle ──
+let currentView='board';
+function setView(v){
+  currentView=v;
+  document.querySelectorAll('.view-btn').forEach(b=>{
+    const label=b.textContent;
+    const match=(v==='board'&&label.includes('Board'))||(v==='comms'&&label.includes('Comms'))||(v==='docs'&&label.includes('Docs'));
+    b.classList.toggle('active',match);
+  });
+  document.getElementById('boardWrap').style.display=v==='board'?'':'none';
+  document.getElementById('filtersRow').style.display=v==='board'?'':'none';
+  document.getElementById('tabBar').style.display=v==='board'?'':'none';
+  document.getElementById('commsSection').classList.toggle('active',v==='comms');
+  document.getElementById('docsSection').classList.toggle('active',v==='docs');
+  if(v==='comms')loadComms();
+  if(v==='docs')renderDocs();
+}
+
+// ── Comms ──
+const AGENT_MAP={
+  'Gus':{emoji:'🕺',role:'CEO'},
+  'Sable':{emoji:'🎨',role:'CDO'},'Pax':{emoji:'🧪',role:'Product'},'Kael':{emoji:'⚡',role:'CTO'},
+  'Maren':{emoji:'🎯',role:'CSO'},'Riku':{emoji:'📣',role:'CMO'},'Tova':{emoji:'⚙️',role:'COO'},
+  'Juno':{emoji:'💰',role:'CFO'},'Reed':{emoji:'🛡️',role:'Legal'},'Nyx':{emoji:'📊',role:'Data'},
+  'Wren':{emoji:'🎯',role:'CS'},'Lyra':{emoji:'🖥️',role:'Frontend'},'Orion':{emoji:'🔧',role:'Backend'},
+  'Vex':{emoji:'🏗️',role:'Infra'},'Atlas':{emoji:'🧠',role:'AI/ML'},'System':{emoji:'⚡',role:''}
+};
+let commsData=[],commsTimer=null;
+
+async function loadComms(){
+  try{
+    const r=await fetch('comms.json?t='+Date.now());
+    if(r.ok){const d=await r.json();if(JSON.stringify(d)!==JSON.stringify(commsData)){commsData=d;renderComms();}}
+  }catch(e){}
+  clearInterval(commsTimer);
+  commsTimer=setInterval(loadComms,3000);
+}
+
+const DOCS=[
+  {title:'Technical Architecture',author:'Kael',authorEmoji:'⚡',icon:'🏗️',iconBg:'rgba(99,102,241,0.15)',
+   desc:'Full stack spec — Next.js 15 + tRPC + Postgres + Stripe Issuing. Key decisions documented with rationale. Supports 10K users.',
+   tags:['Architecture','AgentPay','Technical'],date:'Feb 2, 2026'},
+  {title:'Go-to-Market Plan',author:'Riku',authorEmoji:'📣',icon:'🚀',iconBg:'rgba(52,211,153,0.15)',
+   desc:'Developer-first, self-serve launch strategy. Product Hunt + AI Twitter + content SEO + community seeding. Month 1 targets: 100 signups, 10 active customers.',
+   tags:['GTM','AgentPay','Marketing'],date:'Feb 2, 2026'},
+  {title:'MVP Product Requirements (PRD v1)',author:'Pax',authorEmoji:'🧪',icon:'📋',iconBg:'rgba(245,158,11,0.15)',
+   desc:'4 core epics: Card Management, Policy Engine, Transaction Monitoring, Agent Integration. Ruthlessly scoped — cut fraud ML, mobile, multi-currency to V2+. Success: 50 active cards by Month 3.',
+   tags:['PRD','AgentPay','Product'],date:'Feb 2, 2026'},
+  {title:'Pricing & Competitive Strategy',author:'Maren',authorEmoji:'🎯',icon:'💰',iconBg:'rgba(239,68,68,0.15)',
+   desc:'4-tier pricing (Free→Enterprise). Competitive landscape: Ramp, Brex, Mercury, Stripe Issuing. Key insight: nobody does payments + agent infra together. Target: $500k ARR Year 1.',
+   tags:['Pricing','AgentPay','Strategy'],date:'Feb 2, 2026'},
+  {title:'AgentPay Dashboard UI',author:'Gus',authorEmoji:'🕺',icon:'🎨',iconBg:'rgba(163,130,250,0.15)',
+   desc:'Pixel-perfect Ramp clone with warm beige sidebar. Single HTML file, zero external deps. Currently on v3, awaiting feedback.',
+   tags:['UI','AgentPay','Design'],date:'Feb 1, 2026'},
+  {title:'14-Agent Team Design',author:'Gus',authorEmoji:'🕺',icon:'🧠',iconBg:'rgba(59,130,246,0.15)',
+   desc:'Full org chart: Sable (CDO), Pax (Product), Kael (CTO), Maren (CSO), Riku (CMO), Tova (COO), Juno (CFO), Reed (Legal), Nyx (Data), Wren (CS), Lyra (Frontend), Orion (Backend), Vex (Infra), Atlas (AI/ML).',
+   tags:['Team','Organization'],date:'Feb 1, 2026'},
+];
+
+function renderDocs(){
+  const feed=document.getElementById('docsFeed');
+  feed.innerHTML=DOCS.map(d=>`
+    <div class="doc-card">
+      <div class="doc-header">
+        <div class="doc-icon" style="background:${d.iconBg}">${d.icon}</div>
+        <div>
+          <div class="doc-title">${d.title}</div>
+          <div class="doc-author">${d.authorEmoji} ${d.author} · ${d.date}</div>
+        </div>
+      </div>
+      <div class="doc-desc">${d.desc}</div>
+      <div class="doc-tags">${d.tags.map(t=>`<span class="doc-tag${t==='AgentPay'?' highlight':''}">${t}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+function renderComms(){
+  const feed=document.getElementById('commsFeed');
+  if(!commsData.length){feed.innerHTML='<div class="comms-empty">No agent communications yet...</div>';return;}
+  feed.innerHTML=commsData.map(m=>{
+    if(m.type==='system')return`<div class="comms-msg cm-system"><div class="cm-text">${esc(m.text)}</div></div>`;
+    const a=AGENT_MAP[m.from]||{emoji:'🤖',role:''};
+    const t=m.time?new Date(m.time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'';
+    return`<div class="comms-msg">
+      <div class="cm-avatar">${a.emoji}</div>
+      <div class="cm-body">
+        <div class="cm-head"><span class="cm-name">${esc(m.from)}</span><span class="cm-role">${a.role}</span><span class="cm-time">${t}</span></div>
+        <div class="cm-text">${esc(m.text)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  feed.scrollTop=feed.scrollHeight;
+}
+</script>
+</body>
+</html>
