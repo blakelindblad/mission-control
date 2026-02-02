@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgentPay - Financial Rails for AI Agents</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.5;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background-color: #F5F4F0;
+            padding: 32px 24px;
+            border-right: 1px solid #E5E5E0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 48px;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: #4a4a4a;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background-color: #EEEDE7;
+            color: #1a1a1a;
+        }
+
+        .nav-link.active {
+            background-color: #E8E6DF;
+            color: #1a1a1a;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            opacity: 0.7;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            background-color: #ffffff;
+        }
+
+        .page {
+            display: none;
+            padding: 32px 40px;
+            max-width: 1400px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        /* Metrics Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .metric-card {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .metric-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1.1;
+        }
+
+        .metric-change {
+            font-size: 14px;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .metric-change.positive {
+            color: #059669;
+        }
+
+        .metric-change.negative {
+            color: #dc2626;
+        }
+
+        /* Chart Styles */
+        .chart-container {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 40px;
+        }
+
+        .chart-header {
+            margin-bottom: 24px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .chart {
+            display: flex;
+            align-items: flex-end;
+            height: 200px;
+            gap: 12px;
+            padding: 20px 0;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 4px;
+            position: relative;
+            transition: all 0.3s ease;
+            min-height: 20px;
+        }
+
+        .chart-bar:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: scaleY(1.05);
+        }
+
+        .chart-bar::after {
+            content: attr(data-value);
+            position: absolute;
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* Transaction List */
+        .transactions-preview {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .view-all-btn {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .transaction-item {
+            padding: 16px 24px;
+            border-bottom: 1px solid #f3f4f6;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-item:hover {
+            background-color: #f9fafb;
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            font-weight: 600;
+            color: #4b5563;
+        }
+
+        .transaction-details {
+            flex: 1;
+        }
+
+        .transaction-merchant {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 15px;
+        }
+
+        .transaction-agent {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 15px;
+        }
+
+        .transaction-status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+            margin-left: 12px;
+        }
+
+        .status-approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-declined {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Card Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .virtual-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 24px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .virtual-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .virtual-card.frozen {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        }
+
+        .virtual-card.purple {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+
+        .virtual-card.green {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .virtual-card.orange {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+        }
+
+        .card-logo {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .card-status {
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 8px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card-number {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .card-agent {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .card-balance {
+            text-align: right;
+        }
+
+        .card-balance-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 2px;
+        }
+
+        .card-balance-value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+            border-color: #9ca3af;
+        }
+
+        /* Data Table */
+        .data-table-container {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 240px;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: #f9fafb;
+            padding: 12px 24px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .data-table th:hover {
+            background: #f3f4f6;
+        }
+
+        .data-table td {
+            padding: 16px 24px;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 14px;
+        }
+
+        .data-table tr:hover {
+            background: #f9fafb;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        /* Policy Items */
+        .policy-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .policy-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: #d1d5db;
+        }
+
+        .policy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .policy-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .policy-toggle {
+            background: #10b981;
+            width: 44px;
+            height: 24px;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            border: none;
+            transition: background 0.3s ease;
+        }
+
+        .policy-toggle.disabled {
+            background: #d1d5db;
+        }
+
+        .policy-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .policy-toggle.disabled::after {
+            transform: translateX(0);
+        }
+
+        .toggle-active::after {
+            transform: translateX(20px);
+        }
+
+        .policy-description {
+            color: #6b7280;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .policy-agents {
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .agents-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .agent-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .agent-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: #d1d5db;
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .agent-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+
+        .agent-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+
+        .agent-type {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .agent-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 2px;
+        }
+
+        .agent-status {
+            margin-top: 12px;
+            padding: 8px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 12px;
+            color: #166534;
+            font-weight: 500;
+        }
+
+        .agent-status.inactive {
+            background: #fef2f2;
+            border-color: #fecaca;
+            color: #991b1b;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+
+            .main-content {
+                margin-left: 240px;
+            }
+
+            .page {
+                padding: 24px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="logo">AgentPay</div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" data-page="overview">
+                    <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+                    </svg>
+                    Overview
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="cards">
+                    <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                    </svg>
+                    Cards
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="transactions">
+                    <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+                    </svg>
+                    Transactions
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="policies">
+                    <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                    Policies
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="agents">
+                    <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Agents
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="settings">
+                    <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+                    </svg>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Overview Page -->
+        <div id="overview" class="page active">
+            <div class="page-header">
+                <h1 class="page-title">Overview</h1>
+                <p class="page-subtitle">Monitor your AI agents' spending and activity</p>
+            </div>
+
+            <!-- Key Metrics -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Total Spend</div>
+                    <div class="metric-value">$47,293</div>
+                    <div class="metric-change positive">+12.5% from last month</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Active Cards</div>
+                    <div class="metric-value">23</div>
+                    <div class="metric-change positive">+3 new this week</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Connected Agents</div>
+                    <div class="metric-value">8</div>
+                    <div class="metric-change positive">All active</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Policy Violations</div>
+                    <div class="metric-value">2</div>
+                    <div class="metric-change negative">Requires attention</div>
+                </div>
+            </div>
+
+            <!-- Spending Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h2 class="chart-title">Daily Spend (Last 7 Days)</h2>
+                </div>
+                <div class="chart">
+                    <div class="chart-bar" style="height: 65%;" data-value="Mon"></div>
+                    <div class="chart-bar" style="height: 85%;" data-value="Tue"></div>
+                    <div class="chart-bar" style="height: 45%;" data-value="Wed"></div>
+                    <div class="chart-bar" style="height: 92%;" data-value="Thu"></div>
+                    <div class="chart-bar" style="height: 78%;" data-value="Fri"></div>
+                    <div class="chart-bar" style="height: 35%;" data-value="Sat"></div>
+                    <div class="chart-bar" style="height: 56%;" data-value="Sun"></div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="transactions-preview">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Transactions</h2>
+                    <a href="#" class="view-all-btn" onclick="showPage('transactions')">View All</a>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-icon">OA</div>
+                    <div class="transaction-details">
+                        <div class="transaction-merchant">OpenAI API</div>
+                        <div class="transaction-agent">GPT-4 Research Bot</div>
+                    </div>
+                    <div class="transaction-amount">$89.50</div>
+                    <div class="transaction-status status-approved">Approved</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-icon">AW</div>
+                    <div class="transaction-details">
+                        <div class="transaction-merchant">AWS</div>
+                        <div class="transaction-agent">Data Processing Agent</div>
+                    </div>
+                    <div class="transaction-amount">$156.23</div>
+                    <div class="transaction-status status-approved">Approved</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-icon">VR</div>
+                    <div class="transaction-details">
+                        <div class="transaction-merchant">Vercel</div>
+                        <div class="transaction-agent">Deploy Bot</div>
+                    </div>
+                    <div class="transaction-amount">$24.99</div>
+                    <div class="transaction-status status-pending">Pending</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-icon">GH</div>
+                    <div class="transaction-details">
+                        <div class="transaction-merchant">GitHub</div>
+                        <div class="transaction-agent">Code Review Assistant</div>
+                    </div>
+                    <div class="transaction-amount">$12.00</div>
+                    <div class="transaction-status status-approved">Approved</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-icon">GC</div>
+                    <div class="transaction-details">
+                        <div class="transaction-merchant">Google Cloud</div>
+                        <div class="transaction-agent">ML Training Agent</div>
+                    </div>
+                    <div class="transaction-amount">$234.67</div>
+                    <div class="transaction-status status-approved">Approved</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards Page -->
+        <div id="cards" class="page">
+            <div class="page-header">
+                <h1 class="page-title">Virtual Cards</h1>
+                <p class="page-subtitle">Manage spending limits and card access for your AI agents</p>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openModal('new-card-modal')">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                    New Card
+                </button>
+                <button class="btn btn-secondary">Export Cards</button>
+            </div>
+
+            <div class="cards-grid">
+                <div class="virtual-card">
+                    <div class="card-header">
+                        <div class="card-logo">AP</div>
+                        <div class="card-status">ACTIVE</div>
+                    </div>
+                    <div class="card-number">•••• •••• •••• 4729</div>
+                    <div class="card-footer">
+                        <div class="card-agent">GPT-4 Research Bot</div>
+                        <div class="card-balance">
+                            <div class="card-balance-label">Available</div>
+                            <div class="card-balance-value">$8,271</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="virtual-card purple">
+                    <div class="card-header">
+                        <div class="card-logo">AP</div>
+                        <div class="card-status">ACTIVE</div>
+                    </div>
+                    <div class="card-number">•••• •••• •••• 8942</div>
+                    <div class="card-footer">
+                        <div class="card-agent">Claude Code Assistant</div>
+                        <div class="card-balance">
+                            <div class="card-balance-label">Available</div>
+                            <div class="card-balance-value">$4,567</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="virtual-card green">
+                    <div class="card-header">
+                        <div class="card-logo">AP</div>
+                        <div class="card-status">ACTIVE</div>
+                    </div>
+                    <div class="card-number">•••• •••• •••• 2156</div>
+                    <div class="card-footer">
+                        <div class="card-agent">Marketing Automation Agent</div>
+                        <div class="card-balance">
+                            <div class="card-balance-label">Available</div>
+                            <div class="card-balance-value">$12,890</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="virtual-card orange">
+                    <div class="card-header">
+                        <div class="card-logo">AP</div>
+                        <div class="card-status">ACTIVE</div>
+                    </div>
+                    <div class="card-number">•••• •••• •••• 7364</div>
+                    <div class="card-footer">
+                        <div class="card-agent">Data Processing Agent</div>
+                        <div class="card-balance">
+                            <div class="card-balance-label">Available</div>
+                            <div class="card-balance-value">$3,245</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="virtual-card frozen">
+                    <div class="card-header">
+                        <div class="card-logo">AP</div>
+                        <div class="card-status">FROZEN</div>
+                    </div>
+                    <div class="card-number">•••• •••• •••• 9831</div>
+                    <div class="card-footer">
+                        <div class="card-agent">Compliance Bot</div>
+                        <div class="card-balance">
+                            <div class="card-balance-label">Available</div>
+                            <div class="card-balance-value">$0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="virtual-card">
+                    <div class="card-header">
+                        <div class="card-logo">AP</div>
+                        <div class="card-status">ACTIVE</div>
+                    </div>
+                    <div class="card-number">•••• •••• •••• 5074</div>
+                    <div class="card-footer">
+                        <div class="card-agent">Content Generator</div>
+                        <div class="card-balance">
+                            <div class="card-balance-label">Available</div>
+                            <div class="card-balance-value">$6,789</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions Page -->
+        <div id="transactions" class="page">
+            <div class="page-header">
+                <h1 class="page-title">Transactions</h1>
+                <p class="page-subtitle">Complete transaction history for all agents</p>
+            </div>
+
+            <div class="data-table-container">
+                <div class="table-header">
+                    <h2 class="section-title">All Transactions</h2>
+                    <div class="search-filters">
+                        <input type="text" class="search-input" placeholder="Search transactions...">
+                        <select class="filter-select">
+                            <option value="">All Agents</option>
+                            <option value="gpt4">GPT-4 Research Bot</option>
+                            <option value="claude">Claude Code Assistant</option>
+                            <option value="marketing">Marketing Automation Agent</option>
+                        </select>
+                        <select class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="approved">Approved</option>
+                            <option value="pending">Pending</option>
+                            <option value="declined">Declined</option>
+                        </select>
+                    </div>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Agent</th>
+                            <th>Merchant</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Feb 02, 2026</td>
+                            <td>GPT-4 Research Bot</td>
+                            <td>OpenAI API</td>
+                            <td>AI Services</td>
+                            <td>$89.50</td>
+                            <td><span class="transaction-status status-approved">Approved</span></td>
+                        </tr>
+                        <tr>
+                            <td>Feb 02, 2026</td>
+                            <td>Data Processing Agent</td>
+                            <td>AWS</td>
+                            <td>Cloud Services</td>
+                            <td>$156.23</td>
+                            <td><span class="transaction-status status-approved">Approved</span></td>
+                        </tr>
+                        <tr>
+                            <td>Feb 01, 2026</td>
+                            <td>Deploy Bot</td>
+                            <td>Vercel</td>
+                            <td>Hosting</td>
+                            <td>$24.99</td>
+                            <td><span class="transaction-status status-pending">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>Feb 01, 2026</td>
+                            <td>Code Review Assistant</td>
+                            <td>GitHub</td>
+                            <td>Developer Tools</td>
+                            <td>$12.00</td>
+                            <td><span class="transaction-status status-approved">Approved</span></td>
+                        </tr>
+                        <tr>
+                            <td>Jan 31, 2026</td>
+                            <td>ML Training Agent</td>
+                            <td>Google Cloud</td>
+                            <td>Cloud Services</td>
+                            <td>$234.67</td>
+                            <td><span class="transaction-status status-approved">Approved</span></td>
+                        </tr>
+                        <tr>
+                            <td>Jan 31, 2026</td>
+                            <td>Marketing Automation Agent</td>
+                            <td>Mailchimp</td>
+                            <td>Marketing</td>
+                            <td>$79.99</td>
+                            <td><span class="transaction-status status-approved">Approved</span></td>
+                        </tr>
+                        <tr>
+                            <td>Jan 30, 2026</td>
+                            <td>Claude Code Assistant</td>
+                            <td>Anthropic</td>
+                            <td>AI Services</td>
+                            <td>$124.50</td>
+                            <td><span class="transaction-status status-approved">Approved</span></td>
+                        </tr>
+                        <tr>
+                            <td>Jan 30, 2026</td>
+                            <td>Content Generator</td>
+                            <td>Unsplash</td>
+                            <td>Media</td>
+                            <td>$19.99</td>
+                            <td><span class="transaction-status status-declined">Declined</span></td>
+                        </tr>
+                        <tr>
+                            <td>Jan 29, 2026</td>
+                            <td>Research Assistant</td>
+                            <td>Perplexity</td>
+                            <td>AI Services</td>
+                            <td>$29.99</td>
+                            <td><span class="transaction-status status-approved">Approved</span></td>
+                        </tr>
+                        <tr>
+                            <td>Jan 29, 2026</td>
+                            <td>Social Media Bot</td>
+                            <td>Twitter API</td>
+                            <td>Social Media</td>
+                            <td>$99.00</td>
+                            <td><span class="transaction-status status-approved">Approved</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Policies Page -->
+        <div id="policies" class="page">
+            <div class="page-header">
+                <h1 class="page-title">Spending Policies</h1>
+                <p class="page-subtitle">Automate expense approvals with intelligent rules</p>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openModal('new-policy-modal')">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                    New Policy
+                </button>
+            </div>
+
+            <div class="policy-item">
+                <div class="policy-header">
+                    <h3 class="policy-name">AI Services Auto-Approval</h3>
+                    <button class="policy-toggle toggle-active"></button>
+                </div>
+                <p class="policy-description">Automatically approve AI service charges under $200 from approved vendors (OpenAI, Anthropic, Perplexity, etc.)</p>
+                <div class="policy-agents">
+                    <strong>Assigned Agents:</strong> GPT-4 Research Bot, Claude Code Assistant, Research Assistant
+                </div>
+            </div>
+
+            <div class="policy-item">
+                <div class="policy-header">
+                    <h3 class="policy-name">Cloud Infrastructure Limits</h3>
+                    <button class="policy-toggle toggle-active"></button>
+                </div>
+                <p class="policy-description">Restrict cloud spending to $500/month per agent with manual approval required for overages</p>
+                <div class="policy-agents">
+                    <strong>Assigned Agents:</strong> Data Processing Agent, ML Training Agent, Deploy Bot
+                </div>
+            </div>
+
+            <div class="policy-item">
+                <div class="policy-header">
+                    <h3 class="policy-name">Marketing Tool Restrictions</h3>
+                    <button class="policy-toggle toggle-active"></button>
+                </div>
+                <p class="policy-description">Require approval for all marketing and advertising spend over $50 per transaction</p>
+                <div class="policy-agents">
+                    <strong>Assigned Agents:</strong> Marketing Automation Agent, Social Media Bot
+                </div>
+            </div>
+
+            <div class="policy-item">
+                <div class="policy-header">
+                    <h3 class="policy-name">Weekend Spending Block</h3>
+                    <button class="policy-toggle disabled"></button>
+                </div>
+                <p class="policy-description">Block all non-essential spending outside business hours (9 AM - 6 PM weekdays)</p>
+                <div class="policy-agents">
+                    <strong>Assigned Agents:</strong> All agents except emergency responders
+                </div>
+            </div>
+
+            <div class="policy-item">
+                <div class="policy-header">
+                    <h3 class="policy-name">Developer Tools Allowlist</h3>
+                    <button class="policy-toggle toggle-active"></button>
+                </div>
+                <p class="policy-description">Auto-approve subscriptions to pre-approved developer tools and services under $100/month</p>
+                <div class="policy-agents">
+                    <strong>Assigned Agents:</strong> Code Review Assistant, Deploy Bot, Test Automation Bot
+                </div>
+            </div>
+        </div>
+
+        <!-- Agents Page -->
+        <div id="agents" class="page">
+            <div class="page-header">
+                <h1 class="page-title">Connected Agents</h1>
+                <p class="page-subtitle">Monitor and manage your AI agent fleet</p>
+            </div>
+
+            <div class="agents-list">
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-avatar">G4</div>
+                        <div class="agent-info">
+                            <h3>GPT-4 Research Bot</h3>
+                            <div class="agent-type">Research & Analysis</div>
+                        </div>
+                    </div>
+                    <div class="agent-stats">
+                        <div class="stat">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Cards</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">$8,271</div>
+                            <div class="stat-label">Month Spend</div>
+                        </div>
+                    </div>
+                    <div class="agent-status">Active - Last seen 2 minutes ago</div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-avatar">CC</div>
+                        <div class="agent-info">
+                            <h3>Claude Code Assistant</h3>
+                            <div class="agent-type">Development & Code Review</div>
+                        </div>
+                    </div>
+                    <div class="agent-stats">
+                        <div class="stat">
+                            <div class="stat-value">2</div>
+                            <div class="stat-label">Cards</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">$4,567</div>
+                            <div class="stat-label">Month Spend</div>
+                        </div>
+                    </div>
+                    <div class="agent-status">Active - Last seen 15 minutes ago</div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-avatar">MA</div>
+                        <div class="agent-info">
+                            <h3>Marketing Automation Agent</h3>
+                            <div class="agent-type">Marketing & Campaigns</div>
+                        </div>
+                    </div>
+                    <div class="agent-stats">
+                        <div class="stat">
+                            <div class="stat-value">4</div>
+                            <div class="stat-label">Cards</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">$12,890</div>
+                            <div class="stat-label">Month Spend</div>
+                        </div>
+                    </div>
+                    <div class="agent-status">Active - Last seen 1 hour ago</div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-avatar">DP</div>
+                        <div class="agent-info">
+                            <h3>Data Processing Agent</h3>
+                            <div class="agent-type">Data Analytics & ETL</div>
+                        </div>
+                    </div>
+                    <div class="agent-stats">
+                        <div class="stat">
+                            <div class="stat-value">2</div>
+                            <div class="stat-label">Cards</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">$3,245</div>
+                            <div class="stat-label">Month Spend</div>
+                        </div>
+                    </div>
+                    <div class="agent-status">Active - Last seen 5 minutes ago</div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-avatar">CB</div>
+                        <div class="agent-info">
+                            <h3>Compliance Bot</h3>
+                            <div class="agent-type">Security & Compliance</div>
+                        </div>
+                    </div>
+                    <div class="agent-stats">
+                        <div class="stat">
+                            <div class="stat-value">1</div>
+                            <div class="stat-label">Cards</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">$0</div>
+                            <div class="stat-label">Month Spend</div>
+                        </div>
+                    </div>
+                    <div class="agent-status inactive">Inactive - Card frozen</div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-avatar">CG</div>
+                        <div class="agent-info">
+                            <h3>Content Generator</h3>
+                            <div class="agent-type">Content Creation</div>
+                        </div>
+                    </div>
+                    <div class="agent-stats">
+                        <div class="stat">
+                            <div class="stat-value">2</div>
+                            <div class="stat-label">Cards</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">$6,789</div>
+                            <div class="stat-label">Month Spend</div>
+                        </div>
+                    </div>
+                    <div class="agent-status">Active - Last seen 30 minutes ago</div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-avatar">ML</div>
+                        <div class="agent-info">
+                            <h3>ML Training Agent</h3>
+                            <div class="agent-type">Machine Learning</div>
+                        </div>
+                    </div>
+                    <div class="agent-stats">
+                        <div class="stat">
+                            <div class="stat-value">1</div>
+                            <div class="stat-label">Cards</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">$15,234</div>
+                            <div class="stat-label">Month Spend</div>
+                        </div>
+                    </div>
+                    <div class="agent-status">Active - Last seen 10 minutes ago</div>
+                </div>
+
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-avatar">SM</div>
+                        <div class="agent-info">
+                            <h3>Social Media Bot</h3>
+                            <div class="agent-type">Social Media Management</div>
+                        </div>
+                    </div>
+                    <div class="agent-stats">
+                        <div class="stat">
+                            <div class="stat-value">1</div>
+                            <div class="stat-label">Cards</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">$1,234</div>
+                            <div class="stat-label">Month Spend</div>
+                        </div>
+                    </div>
+                    <div class="agent-status">Active - Last seen 45 minutes ago</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settings" class="page">
+            <div class="page-header">
+                <h1 class="page-title">Settings</h1>
+                <p class="page-subtitle">Configure your AgentPay workspace</p>
+            </div>
+
+            <div style="background: white; padding: 40px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                <h3 style="margin-bottom: 16px; color: #1a1a1a; font-weight: 600;">Account Settings</h3>
+                <p style="color: #6b7280; margin-bottom: 24px;">Manage your account preferences and security settings.</p>
+                
+                <div style="display: grid; gap: 16px;">
+                    <div>
+                        <label class="form-label">Company Name</label>
+                        <input type="text" class="form-input" value="AgentPay Technologies" style="max-width: 300px;">
+                    </div>
+                    <div>
+                        <label class="form-label">Billing Email</label>
+                        <input type="email" class="form-input" value="billing@agentpay.com" style="max-width: 300px;">
+                    </div>
+                    <div>
+                        <label class="form-label">Default Spending Limit</label>
+                        <input type="number" class="form-input" value="10000" style="max-width: 200px;">
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" style="margin-top: 24px;">Save Changes</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- New Card Modal -->
+    <div id="new-card-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Virtual Card</h2>
+                <p style="color: #6b7280;">Set up a new spending card for an AI agent</p>
+            </div>
+
+            <form>
+                <div class="form-group">
+                    <label class="form-label">Agent Name</label>
+                    <select class="form-input">
+                        <option value="">Select an agent</option>
+                        <option value="gpt4">GPT-4 Research Bot</option>
+                        <option value="claude">Claude Code Assistant</option>
+                        <option value="marketing">Marketing Automation Agent</option>
+                        <option value="data">Data Processing Agent</option>
+                        <option value="content">Content Generator</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Card Nickname</label>
+                    <input type="text" class="form-input" placeholder="e.g., Research Tools Card">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Spending Limit</label>
+                    <input type="number" class="form-input" placeholder="1000" min="0" step="100">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Category Restrictions</label>
+                    <select class="form-input" multiple>
+                        <option value="ai-services">AI Services</option>
+                        <option value="cloud">Cloud Infrastructure</option>
+                        <option value="marketing">Marketing Tools</option>
+                        <option value="development">Development Tools</option>
+                        <option value="media">Media & Assets</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('new-card-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Card</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- New Policy Modal -->
+    <div id="new-policy-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Policy</h2>
+                <p style="color: #6b7280;">Define spending rules and approval workflows</p>
+            </div>
+
+            <form>
+                <div class="form-group">
+                    <label class="form-label">Policy Name</label>
+                    <input type="text" class="form-input" placeholder="e.g., Monthly Cloud Limit">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input" rows="3" placeholder="Describe what this policy does..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Rule Type</label>
+                    <select class="form-input">
+                        <option value="amount-limit">Amount Limit</option>
+                        <option value="category-restriction">Category Restriction</option>
+                        <option value="time-based">Time-based Rule</option>
+                        <option value="vendor-allowlist">Vendor Allowlist</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Assigned Agents</label>
+                    <select class="form-input" multiple>
+                        <option value="gpt4">GPT-4 Research Bot</option>
+                        <option value="claude">Claude Code Assistant</option>
+                        <option value="marketing">Marketing Automation Agent</option>
+                        <option value="data">Data Processing Agent</option>
+                        <option value="content">Content Generator</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('new-policy-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Policy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Remove active class from all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+
+            // Add active class to clicked nav link
+            document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+        }
+
+        // Add click event listeners to navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const pageId = this.getAttribute('data-page');
+                if (pageId) {
+                    showPage(pageId);
+                }
+            });
+        });
+
+        // Modal functionality
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('show');
+                }
+            });
+        });
+
+        // Policy toggle functionality
+        document.querySelectorAll('.policy-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('disabled');
+                this.classList.toggle('toggle-active');
+            });
+        });
+
+        // Form submissions
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // In a real app, this would submit to a backend
+                alert('Form submitted successfully!');
+                // Close the modal if it's in a modal
+                const modal = this.closest('.modal');
+                if (modal) {
+                    modal.classList.remove('show');
+                }
+            });
+        });
+
+        // Add hover animations to cards
+        document.querySelectorAll('.virtual-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-4px)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Animate chart bars on load
+        window.addEventListener('load', function() {
+            const chartBars = document.querySelectorAll('.chart-bar');
+            chartBars.forEach((bar, index) => {
+                setTimeout(() => {
+                    bar.style.opacity = '1';
+                    bar.style.transform = 'scaleY(1)';
+                }, index * 100);
+            });
+        });
+
+        // Initialize chart bars
+        document.querySelectorAll('.chart-bar').forEach(bar => {
+            bar.style.opacity = '0';
+            bar.style.transform = 'scaleY(0.1)';
+            bar.style.transformOrigin = 'bottom';
+            bar.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        });
+    </script>
+</body>
+</html>

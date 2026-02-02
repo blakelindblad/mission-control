@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building AgentPay: Our Technical Decisions - AgentPay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #FFFFFF;
+            color: #111827;
+            line-height: 1.7;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            color: #6366F1;
+            text-decoration: none;
+            margin-bottom: 40px;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        
+        .back-link:hover {
+            opacity: 0.8;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #6366F1, #4f46e5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: #6b7280;
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            color: #6366F1;
+        }
+        
+        h3 {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #6366F1;
+        }
+        
+        p {
+            margin-bottom: 20px;
+            color: #374151;
+        }
+        
+        .code-block {
+            background-color: #F9FAFB;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 14px;
+            color: #111827;
+            overflow-x: auto;
+        }
+        
+        .tech-stack {
+            background-color: #F9FAFB;
+            border-left: 4px solid #6366F1;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 4px;
+        }
+        
+        .tech-stack ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .tech-stack li {
+            margin-bottom: 8px;
+            color: #374151;
+        }
+        
+        .challenge {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .challenge h4 {
+            color: #6366F1;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        ul {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            color: #374151;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="#" class="back-link">← Back to Mission Control</a>
+        
+        <h1>Building AgentPay: Our Technical Decisions</h1>
+        <p class="subtitle">Why we chose this stack and how we solved the unique challenges of agent financial infrastructure</p>
+        
+        <p>When we started building AgentPay, we knew we weren't just building another fintech dashboard. We were creating financial infrastructure for a new class of economic actors that operate at machine speed, make decisions algorithmically, and need zero-latency policy enforcement.</p>
+        
+        <p>Here's how we approached the technical challenges and why we made the choices we did.</p>
+        
+        <h2>Our Tech Stack: Built for Speed and Scale</h2>
+        
+        <div class="tech-stack">
+            <p><strong>Our core stack:</strong></p>
+            <ul>
+                <li><strong>Frontend:</strong> Next.js 14 with TypeScript</li>
+                <li><strong>API Layer:</strong> tRPC for end-to-end type safety</li>
+                <li><strong>Database:</strong> PostgreSQL with Prisma ORM</li>
+                <li><strong>Card Issuing:</strong> Stripe Issuing API</li>
+                <li><strong>Infrastructure:</strong> Vercel + Railway</li>
+                <li><strong>Monitoring:</strong> Sentry + Grafana</li>
+            </ul>
+        </div>
+        
+        <h3>Why Next.js + tRPC?</h3>
+        
+        <p>We needed to move fast without breaking things. tRPC gives us full-stack type safety, which means we catch API contract violations at compile time rather than in production. When you're dealing with financial transactions, runtime errors aren't just bugs—they're potential compliance disasters.</p>
+        
+        <div class="code-block">
+// Real-time policy enforcement with type safety
+const createAgentCard = t.procedure
+  .input(z.object({
+    agentId: z.string(),
+    spendingLimit: z.number().min(1).max(50000),
+    allowedMerchants: z.array(z.string()),
+    timeRestrictions: z.object({...})
+  }))
+  .mutation(async ({ input }) => {
+    // Policy validation happens here
+    return await stripeIssuing.createCard({...})
+  })
+        </div>
+        
+        <h3>PostgreSQL: The Right Tool for Financial Data</h3>
+        
+        <p>We considered MongoDB and other NoSQL options, but financial data demands ACID transactions. When an agent attempts a purchase, we need to atomically check balances, update limits, and log the transaction. PostgreSQL's mature transaction handling and JSON support gave us the best of both worlds.</p>
+        
+        <h2>The Unique Challenges of Agent Financial Infrastructure</h2>
+        
+        <div class="challenge">
+            <h4>Challenge 1: Millisecond-Level Policy Decisions</h4>
+            <p>Human transactions happen over seconds or minutes. Agent transactions happen in milliseconds. We needed to validate spending policies, check balances, and approve/decline transactions in under 100ms to avoid timeout errors.</p>
+        </div>
+        
+        <p>Our solution: aggressive caching with Redis and precomputed policy rules. Instead of calculating policy compliance on each transaction, we precompute approval matrices and cache them by agent+merchant combinations.</p>
+        
+        <div class="challenge">
+            <h4>Challenge 2: Contextual Transaction Logging</h4>
+            <p>Traditional card transactions have minimal context—merchant, amount, timestamp. Agent transactions need rich metadata about the task, reasoning, and business justification for auditing and reconciliation.</p>
+        </div>
+        
+        <p>We extended Stripe's webhook system to capture custom metadata that agents include with each transaction request. This data gets stored in our PostgreSQL instance with full-text search capabilities for easy auditing.</p>
+        
+        <div class="challenge">
+            <h4>Challenge 3: Dynamic Limit Management</h4>
+            <p>Agent spending patterns are unpredictable. A machine learning agent might need $50/day normally, then $5,000 for a training run. We needed flexible limit systems that could adapt programmatically.</p>
+        </div>
+        
+        <h2>Real-Time Policy Enforcement Architecture</h2>
+        
+        <p>This was the hardest part. We built a policy engine that can evaluate complex spending rules in real-time:</p>
+        
+        <div class="code-block">
+// Policy engine evaluates rules like:
+// "Agent can spend up to $500/day on AWS, 
+//  but only during business hours,
+//  and only if project budget has remaining funds"
+
+class PolicyEngine {
+  async evaluateTransaction(transaction: AgentTransaction) {
+    const policies = await this.getPoliciesForAgent(transaction.agentId);
+    
+    for (const policy of policies) {
+      const result = await policy.evaluate(transaction);
+      if (result.deny) {
+        return { approved: false, reason: result.reason };
+      }
+    }
+    
+    return { approved: true };
+  }
+}
+        </div>
+        
+        <p>We use a rule-based system with time-based caching to ensure sub-100ms response times even for complex multi-condition policies.</p>
+        
+        <h2>Security and Compliance: Built-In, Not Bolted-On</h2>
+        
+        <p>Financial infrastructure requires security by design. Here's how we approached it:</p>
+        
+        <ul>
+            <li><strong>Zero-Trust Architecture:</strong> Every API call is authenticated and authorized, even internal services</li>
+            <li><strong>Encryption Everywhere:</strong> All sensitive data encrypted at rest and in transit using AES-256</li>
+            <li><strong>Immutable Audit Logs:</strong> Every transaction and policy decision is logged immutably for compliance</li>
+            <li><strong>PCI Compliance:</strong> We never touch card data directly—all payments flow through Stripe's PCI-compliant infrastructure</li>
+            <li><strong>Rate Limiting:</strong> Aggressive rate limiting to prevent both accidental and malicious abuse</li>
+        </ul>
+        
+        <h3>Monitoring: Because Finance Can't Go Down</h3>
+        
+        <p>We monitor everything: API response times, database query performance, Stripe webhook delivery rates, and policy engine decision latencies. Financial infrastructure has zero tolerance for downtime, so we built comprehensive alerting from day one.</p>
+        
+        <h2>What We Learned</h2>
+        
+        <p>Building financial infrastructure for AI agents taught us that the future of fintech isn't just digital—it's algorithmic. Agents don't just need different UIs; they need fundamentally different financial primitives.</p>
+        
+        <p>The hardest part wasn't the technical complexity—it was reimagining financial controls for actors that don't think like humans. Traditional expense management assumes human judgment and post-hoc reconciliation. Agent finance requires programmatic guardrails and real-time decision making.</p>
+        
+        <p>But when it works, it's magical. Agents can operate autonomously within clear financial boundaries, making your business more efficient while reducing financial risk. That's the future we're building toward, one transaction at a time.</p>
+    </div>
+</body>
+</html>
