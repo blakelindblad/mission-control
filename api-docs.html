@@ -13,8 +13,8 @@
 
         body {
             font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #0a0a0f;
-            color: #e4e4e7;
+            background-color: #FFFFFF;
+            color: #374151;
             line-height: 1.6;
         }
 
@@ -26,8 +26,8 @@
         /* Sidebar */
         .sidebar {
             width: 280px;
-            background-color: #111111;
-            border-right: 1px solid #27272a;
+            background-color: #F5F4F0;
+            border-right: 1px solid #E5E7EB;
             padding: 2rem 0;
             position: fixed;
             height: 100vh;
@@ -36,7 +36,7 @@
 
         .sidebar h2 {
             padding: 0 1.5rem;
-            color: #f59e0b;
+            color: #6366F1;
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 2rem;
@@ -48,7 +48,7 @@
 
         .nav-section h3 {
             padding: 0 1.5rem;
-            color: #a1a1aa;
+            color: #6B7280;
             font-size: 0.875rem;
             font-weight: 600;
             text-transform: uppercase;
@@ -59,7 +59,7 @@
         .nav-link {
             display: block;
             padding: 0.5rem 1.5rem;
-            color: #d4d4d8;
+            color: #374151;
             text-decoration: none;
             font-size: 0.925rem;
             border-left: 3px solid transparent;
@@ -67,15 +67,15 @@
         }
 
         .nav-link:hover {
-            background-color: #18181b;
-            color: #f59e0b;
-            border-left-color: #f59e0b;
+            background-color: #FFFBEB;
+            color: #6366F1;
+            border-left-color: #6366F1;
         }
 
         .nav-link.active {
-            background-color: #18181b;
-            color: #f59e0b;
-            border-left-color: #f59e0b;
+            background-color: #FFFBEB;
+            color: #6366F1;
+            border-left-color: #6366F1;
         }
 
         /* Main Content */
@@ -94,13 +94,13 @@
         .header h1 {
             font-size: 3rem;
             font-weight: 800;
-            color: #f59e0b;
+            color: #111827;
             margin-bottom: 1rem;
         }
 
         .header p {
             font-size: 1.25rem;
-            color: #a1a1aa;
+            color: #6B7280;
             max-width: 600px;
             margin: 0 auto;
         }
@@ -113,18 +113,19 @@
         .section h2 {
             font-size: 2rem;
             font-weight: 700;
-            color: #f59e0b;
+            color: #111827;
             margin-bottom: 1rem;
-            border-bottom: 1px solid #27272a;
+            border-bottom: 1px solid #E5E7EB;
             padding-bottom: 0.5rem;
         }
 
         .endpoint {
-            background-color: #111111;
-            border: 1px solid #27272a;
+            background-color: #FFFFFF;
+            border: 1px solid #E5E7EB;
             border-radius: 8px;
             padding: 2rem;
             margin-bottom: 2rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
         }
 
         .endpoint-header {
@@ -140,28 +141,29 @@
             font-size: 0.875rem;
             margin-right: 1rem;
             text-transform: uppercase;
+            color: white;
         }
 
-        .method.post { background-color: #059669; }
-        .method.get { background-color: #2563eb; }
-        .method.patch { background-color: #dc2626; }
-        .method.delete { background-color: #dc2626; }
+        .method.post { background-color: #6366F1; }
+        .method.get { background-color: #10B981; }
+        .method.patch { background-color: #F59E0B; }
+        .method.delete { background-color: #EF4444; }
 
         .endpoint-path {
             font-family: 'SF Mono', Consolas, 'Liberation Mono', monospace;
             font-size: 1.125rem;
             font-weight: 600;
-            color: #e4e4e7;
+            color: #111827;
         }
 
         .endpoint-description {
-            color: #a1a1aa;
+            color: #6B7280;
             margin-bottom: 2rem;
         }
 
         .code-block {
-            background-color: #000000;
-            border: 1px solid #27272a;
+            background-color: #F3F4F6;
+            border: 1px solid #E5E7EB;
             border-radius: 6px;
             padding: 1.5rem;
             margin: 1rem 0;
@@ -171,24 +173,24 @@
         .code-block pre {
             font-family: 'SF Mono', Consolas, 'Liberation Mono', monospace;
             font-size: 0.875rem;
-            color: #e4e4e7;
+            color: #1F2937;
             white-space: pre-wrap;
         }
 
         .code-block .json-key {
-            color: #60a5fa;
+            color: #7C3AED;
         }
 
         .code-block .json-string {
-            color: #34d399;
+            color: #059669;
         }
 
         .code-block .json-number {
-            color: #f59e0b;
+            color: #DC2626;
         }
 
         .code-block .json-boolean {
-            color: #fb7185;
+            color: #9333EA;
         }
 
         .subsection {
@@ -198,7 +200,7 @@
         .subsection h4 {
             font-size: 1.125rem;
             font-weight: 600;
-            color: #f59e0b;
+            color: #111827;
             margin-bottom: 0.75rem;
         }
 
@@ -210,56 +212,57 @@
         }
 
         .error-code {
-            background-color: #1a1a1a;
-            border: 1px solid #27272a;
+            background-color: #F9FAFB;
+            border: 1px solid #E5E7EB;
             border-radius: 4px;
             padding: 1rem;
         }
 
         .error-code .code {
             font-weight: 600;
-            color: #f59e0b;
+            color: #DC2626;
             margin-bottom: 0.5rem;
         }
 
         .error-code .description {
-            color: #a1a1aa;
+            color: #6B7280;
             font-size: 0.875rem;
         }
 
         .webhook-event {
-            background-color: #111111;
-            border: 1px solid #27272a;
+            background-color: #FFFFFF;
+            border: 1px solid #E5E7EB;
             border-radius: 6px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
         }
 
         .webhook-event h4 {
-            color: #f59e0b;
+            color: #111827;
             margin-bottom: 0.75rem;
             font-size: 1.125rem;
         }
 
         .auth-info {
-            background-color: #0f172a;
-            border: 1px solid #1e293b;
+            background-color: #F9FAFB;
+            border: 1px solid #E5E7EB;
             border-radius: 8px;
             padding: 1.5rem;
             margin-bottom: 3rem;
         }
 
         .auth-info h3 {
-            color: #60a5fa;
+            color: #6366F1;
             margin-bottom: 1rem;
         }
 
         .auth-info code {
-            background-color: #1e293b;
+            background-color: #E5E7EB;
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
             font-family: 'SF Mono', Consolas, monospace;
-            color: #f59e0b;
+            color: #1F2937;
         }
 
         @media (max-width: 1024px) {
@@ -923,7 +926,7 @@
             <section id="decline-transaction" class="section">
                 <div class="endpoint">
                     <div class="endpoint-header">
-                        <span class="method post">POST</span>
+                        <span class="method delete">DELETE</span>
                         <span class="endpoint-path">/v1/transactions/{transaction_id}/decline</span>
                     </div>
                     <p class="endpoint-description">Declines a pending transaction and prevents it from being processed.</p>
@@ -1085,9 +1088,9 @@
             
             let currentSection = '';
             sections.forEach(section => {
-                const sectionTop = section.offsetTop - 100;
-                if (scrollY >= sectionTop) {
-                    currentSection = section.getAttribute('id');
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 100 && rect.bottom >= 100) {
+                    currentSection = section.id;
                 }
             });
 
@@ -1095,22 +1098,6 @@
                 link.classList.remove('active');
                 if (link.getAttribute('href') === `#${currentSection}`) {
                     link.classList.add('active');
-                }
-            });
-        });
-
-        // Format JSON in code blocks
-        document.addEventListener('DOMContentLoaded', () => {
-            const codeBlocks = document.querySelectorAll('.code-block pre');
-            codeBlocks.forEach(block => {
-                const text = block.textContent;
-                try {
-                    if (text.trim().startsWith('{') || text.trim().startsWith('[')) {
-                        // Already formatted
-                        return;
-                    }
-                } catch (e) {
-                    // Not JSON, leave as is
                 }
             });
         });
