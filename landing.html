@@ -9,14 +9,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --color-bg: #0a0a0f;
-            --color-card: #13131e;
-            --color-accent: #f59e0b;
-            --color-secondary: #6366f1;
-            --color-text-primary: #ffffff;
-            --color-text-secondary: #94a3b8;
-            --color-text-muted: #64748b;
-            --color-border: #1f2937;
+            --color-bg: #ffffff;
+            --color-bg-alt: #f9fafb;
+            --color-bg-warm: #f5f4f0;
+            --color-card: #ffffff;
+            --color-primary: #6366f1;
+            --color-secondary: #f59e0b;
+            --color-text-primary: #111827;
+            --color-text-secondary: #374151;
+            --color-text-muted: #6b7280;
+            --color-border: #e5e7eb;
+            --color-border-light: #f3f4f6;
+            --color-success: #10b981;
+            --color-error: #ef4444;
             --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
@@ -49,7 +54,7 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(10, 10, 15, 0.8);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--color-border);
             z-index: 1000;
@@ -65,7 +70,7 @@
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--color-accent);
+            color: var(--color-primary);
         }
 
         .nav-links {
@@ -86,8 +91,8 @@
         }
 
         .nav-cta {
-            background: var(--color-accent);
-            color: var(--color-bg);
+            background: var(--color-primary);
+            color: white;
             padding: 0.75rem 1.5rem;
             border-radius: 8px;
             text-decoration: none;
@@ -96,7 +101,7 @@
         }
 
         .nav-cta:hover {
-            background: #d97706;
+            background: #5048e5;
             transform: translateY(-1px);
         }
 
@@ -104,7 +109,7 @@
         .hero {
             padding: 8rem 0 4rem;
             text-align: center;
-            background: linear-gradient(135deg, var(--color-bg) 0%, #111827 100%);
+            background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-alt) 100%);
         }
 
         .hero-content {
@@ -116,7 +121,7 @@
             font-size: 4rem;
             font-weight: 800;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-accent) 100%);
+            background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-primary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -136,27 +141,28 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: var(--color-accent);
-            color: var(--color-bg);
+            background: var(--color-primary);
+            color: white;
             padding: 1rem 2rem;
             border-radius: 12px;
             text-decoration: none;
             font-weight: 600;
             font-size: 1.1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
         }
 
         .cta-button:hover {
-            background: #d97706;
+            background: #5048e5;
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
         }
 
         /* Social Proof */
         .social-proof {
             padding: 4rem 0;
             border-bottom: 1px solid var(--color-border);
+            background: var(--color-bg-warm);
         }
 
         .logos-strip {
@@ -172,6 +178,7 @@
             width: 120px;
             height: 40px;
             background: var(--color-card);
+            border: 1px solid var(--color-border);
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -195,12 +202,12 @@
         .metric-value {
             font-size: 2.5rem;
             font-weight: 700;
-            color: var(--color-accent);
+            color: var(--color-primary);
             margin-bottom: 0.5rem;
         }
 
         .metric-label {
-            color: var(--color-text-secondary);
+            color: var(--color-text-muted);
             font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -209,6 +216,7 @@
         /* Features */
         .features {
             padding: 6rem 0;
+            background: var(--color-bg);
         }
 
         .section-header {
@@ -220,6 +228,7 @@
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
+            color: var(--color-text-primary);
         }
 
         .section-header p {
@@ -241,17 +250,19 @@
             border-radius: 16px;
             padding: 2.5rem;
             transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .feature-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--color-primary);
         }
 
         .feature-icon {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, var(--color-accent), var(--color-secondary));
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -264,6 +275,7 @@
             font-size: 1.5rem;
             font-weight: 600;
             margin-bottom: 1rem;
+            color: var(--color-text-primary);
         }
 
         .feature-card p {
@@ -274,7 +286,7 @@
         /* How It Works */
         .how-it-works {
             padding: 6rem 0;
-            background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-card) 100%);
+            background: var(--color-bg-alt);
         }
 
         .steps {
@@ -292,7 +304,7 @@
         .step-number {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, var(--color-accent), var(--color-secondary));
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -300,13 +312,14 @@
             font-size: 2rem;
             font-weight: 700;
             margin: 0 auto 1.5rem;
-            color: var(--color-bg);
+            color: white;
         }
 
         .step h3 {
             font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 1rem;
+            color: var(--color-text-primary);
         }
 
         .step p {
@@ -316,6 +329,7 @@
         /* Pricing */
         .pricing {
             padding: 6rem 0;
+            background: var(--color-bg);
         }
 
         .pricing-grid {
@@ -332,11 +346,12 @@
             padding: 2.5rem;
             position: relative;
             transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .pricing-card.featured {
-            border-color: var(--color-accent);
-            box-shadow: 0 0 30px rgba(245, 158, 11, 0.2);
+            border-color: var(--color-primary);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.15);
         }
 
         .pricing-card.featured::before {
@@ -345,8 +360,8 @@
             top: -12px;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--color-accent);
-            color: var(--color-bg);
+            background: var(--color-secondary);
+            color: white;
             padding: 0.5rem 1rem;
             border-radius: 8px;
             font-size: 0.875rem;
@@ -355,7 +370,7 @@
 
         .pricing-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
         .pricing-header {
@@ -367,17 +382,18 @@
             font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
+            color: var(--color-text-primary);
         }
 
         .pricing-price {
             font-size: 3rem;
             font-weight: 700;
-            color: var(--color-accent);
+            color: var(--color-primary);
             margin-bottom: 0.5rem;
         }
 
         .pricing-period {
-            color: var(--color-text-secondary);
+            color: var(--color-text-muted);
             font-size: 0.875rem;
         }
 
@@ -396,13 +412,13 @@
 
         .pricing-features li::before {
             content: "✓";
-            color: var(--color-accent);
+            color: var(--color-success);
             font-weight: 600;
         }
 
         .pricing-cta {
             width: 100%;
-            background: var(--color-secondary);
+            background: var(--color-primary);
             color: white;
             border: none;
             padding: 1rem;
@@ -418,8 +434,8 @@
         }
 
         .pricing-card.featured .pricing-cta {
-            background: var(--color-accent);
-            color: var(--color-bg);
+            background: var(--color-secondary);
+            color: white;
         }
 
         .pricing-card.featured .pricing-cta:hover {
@@ -430,13 +446,14 @@
         .final-cta {
             padding: 6rem 0;
             text-align: center;
-            background: linear-gradient(135deg, var(--color-card) 0%, var(--color-bg) 100%);
+            background: var(--color-bg-warm);
         }
 
         .final-cta h2 {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
+            color: var(--color-text-primary);
         }
 
         .final-cta p {
@@ -452,6 +469,7 @@
         .footer {
             padding: 4rem 0 2rem;
             border-top: 1px solid var(--color-border);
+            background: var(--color-bg);
         }
 
         .footer-content {
@@ -465,6 +483,7 @@
             font-size: 1.125rem;
             font-weight: 600;
             margin-bottom: 1rem;
+            color: var(--color-text-primary);
         }
 
         .footer-section ul {
